@@ -1,0 +1,15 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: rgb(166, 238, 214);
+}
+
+.title {
+    margin: 0;
+}
+
+.logo {
+    margin-left: 20px;
+}
