@@ -8,16 +8,21 @@ const { validateFields } = require('../middlewares/validateFields');
 
 const router = Router();
 
-router.get('/in', getSignInPage);
+router.get('/sign/in', getSignInPage);
 
-router.get('/up', getSignUpPage);
+router.get('/sign/up', getSignUpPage);
 
-router.post('/in', [
+router.post('/sign/in', [
     check('email', 'Email is mandatory').isEmail(),
     check('password', 'Password is mandatory').not().isEmpty(),
     validateFields
 ], signInUser);
 
-router.post('/up', signUpNewUser)
+router.post('/sign/up',[
+    check('password', 'Password is mandatory').not().isEmpty(),
+    check('email', 'Email is mandatory').isEmail(),
+    check('password', 'Password is mandatory').not().isEmpty(),
+    
+], signUpNewUser)
 
 module.exports = router;

@@ -12,18 +12,14 @@ const dbConnection = async() => {
             useCreateIndex: true,
             useFindAndModify: false
         });
-    
+
         console.log('DB connection succeed');
 
     } catch (error) {
         console.log(error);
-        throw new Error('Error a la hora de iniciar la base de datos');
+        throw new Error('Cannot connect to the data base');
     }
-
-
 }
-
-
 
 module.exports = {
     dbConnection
