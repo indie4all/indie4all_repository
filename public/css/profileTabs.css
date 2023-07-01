@@ -1,0 +1,48 @@
+/* Estilos CSS para los tabs */
+.tab-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.tab-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.tab-list-item {
+    margin-right: 10px;
+}
+
+.tab-list-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ccc;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px 5px 0 0;
+}
+
+.tab-list-link:hover {
+    background-color: #aaa;
+}
+
+.tab-list-link.active {
+    background-color: rgb(166, 238, 214);
+    color: #333;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0 5px 5px 5px;
+}
+
+.tab-content.active {
+    display: block;
+}
+

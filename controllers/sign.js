@@ -40,7 +40,7 @@ const signInUser = async (req = request, res = response) => {
         });
     }
     //Create new JWT
-    const token = await getJwt(email);
+    const token = await getJwt(user.id);
 
     //Save token in cookies
     res.cookie('token', token);
@@ -52,20 +52,20 @@ const signUpNewUser = async (req = request, res = response) => {
     console.log('Sign Up New User')
 
     //Retrieve user
-    const { name, email, password} = req.body;
+    const { name, email, password } = req.body;
 
     //Verify if user already exists
     const userExists = await User.findOne({ 'email': email });
-    if(userExists){
+    if (userExists) {
         console.log("User already registered");
-        return res.render('sign/up', { 
+        return res.render('sign/up', {
             layout: 'layout',
             message: 'User already registered'
         });
     }
 
     //Create the new user to save it with USER_ROLE by default
-    const user = new User({ name, email, password});
+    const user = new User({ name, email, password });
 
     //Encrypt password
     const salt = bcryptjs.genSaltSync();
@@ -74,17 +74,40 @@ const signUpNewUser = async (req = request, res = response) => {
     //Save in the data base
     await user.save();
 
-    //return res.status(200).redirect('/user/sign/in');
-    return res.status(200).render('sign/in', { 
+    return res.status(200).render('sign/in', {
         layout: 'layout',
         message: 'User registered successfully.'
     });
 
 }
 
+const getProfile = async (req = request, res = response) => {
+    console.log('Rendering profile page')
+
+    //Retrieve the user role
+    const {role} = await User.findOne({ '_id': req.uid });
+
+    //Check if the user is admin and have access to 'Users' tab
+    let admin = false;
+    if(role == 'ADMIN_ROLE'){
+        admin = true;
+    }
+
+    //Retrieve all the users
+    const allUsers = await User.find({}).lean();
+
+    res.render('profile/profile', {
+        layout: 'layout',
+        allUsers: allUsers,
+        admin: admin
+    })
+}
+
+
 module.exports = {
     getSignInPage,
     getSignUpPage,
     signInUser,
-    signUpNewUser
+    signUpNewUser,
+    getProfile
 }

@@ -1,5 +1,5 @@
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
+const emailInput = document.getElementById('emailInput');
+const passwordInput = document.getElementById('passowrdInput');
 const emailError = document.getElementById('error-email');
 const passwordError = document.getElementById('error-password');
 var button = document.getElementById('signUpButton');

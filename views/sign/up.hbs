@@ -12,19 +12,19 @@
     <form class="sign-up-form" action="/user/sign/up" method="POST">
 
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" placeholder="Name"
+        <input type="text" id="nameInput" name="name" placeholder="Name"
             pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"
             required><br>
 
 
         <label for="email">Email:</label>
-        <input type="text" id="email" name="email" placeholder="Email"
+        <input type="text" id="emailInput" name="email" placeholder="Email"
             pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required><br>
         <span id="error-email" style="color: red;"></span>
 
 
         <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" placeholder="Password" pattern="[A-Za-z0-9!?-]{8,12}"
+        <input type="password" id="passowrdInput" name="password" placeholder="Password" pattern="[A-Za-z0-9!?-]{8,12}"
             required><br>
         <span id="error-password" style="color: red;"></span>
 

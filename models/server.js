@@ -13,7 +13,7 @@ class Server {
       this.port = process.env.PORT;
       this.usuariosPath = '/';
       this.userPath = '/user'
-      this.profilePath = '/profile'
+      //this.profilePath = '/profile'
 
       this.dbConnect();
 
@@ -31,7 +31,7 @@ class Server {
    routes() {
 
       this.app.use(this.usuariosPath, require('../routes/home'));
-      this.app.use(this.userPath, require('../routes/sign'));
+      this.app.use(this.userPath, require('../routes/user'));
       this.app.set('views', path.join(__dirname, '../views'));
       this.app.use(express.static(path.join(__dirname, '../public')));
 
