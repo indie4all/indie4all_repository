@@ -5,6 +5,13 @@ const { dbConnection } = require('../database/config');
 const bodyParser = require('body-parser');
 var cors = require('cors');
 var cookieParser = require('cookie-parser')
+require('console-stamp')(console, {
+   format: ':date(yyyy/mm/dd HH:MM:ss.l) :label'
+});
+
+
+const handlebars = require('handlebars');
+
 
 class Server {
 
@@ -39,7 +46,7 @@ class Server {
    listen() {
 
       this.app.listen(this.port, () => {
-         console.log('Server running on port', this.port);
+         console.info('Server running on port', this.port);
       })
 
    }
@@ -60,6 +67,14 @@ class Server {
       }
       ));
       this.app.set('view engine', 'hbs');
+
+      handlebars.registerHelper('isEqual', function (value1, value2, options) {
+         if (value1 === value2) {
+            return options.fn(this);
+         } else {
+            return options.inverse(this);
+         }
+      });
 
       //Para que nos llegue bien el body de los forms
       this.app.use(bodyParser.urlencoded({ limit: '5000mb', extended: true, parameterLimit: 100000000000 }));

@@ -1,3 +1,6 @@
+
+//ESTE SCRIPT YA NO LO USO PERO LO DEJO POR SI ACASO
+
 const editButtonAllUsersTab = document.getElementById('editButtonAllUsersTab');
 const saveButtonAllUsersTab = document.getElementById('saveButtonAllUsersTab');
 const cancelButtonAllUsersTab = document.getElementById('cancelButtonAllUsersTab');
@@ -41,7 +44,7 @@ function changeButtonsDisplay() {
 }
 
 function changeInputsProperty() {
-    if (nameInputAllUsers.disabled == true) {
+    if (nameInputAllUsers.disabled) {
         nameInputAllUsers.disabled = false;
         emailInputAllUsers.disabled = false;
         roleInputAllUsers.disabled = false;

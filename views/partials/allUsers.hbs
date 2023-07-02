@@ -1,30 +1,26 @@
 <section class="allUsersSection">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/usersCards.css">
 
 
+    {{> search}}
     {{#each allUsers}}
 
     <div class="user-card">
-        <h2>Name</h2>
-        <input type="text" id="nameInputAllUsers" class="allUsersInput" value="{{this.name}}">
-        <p>Email</p>
-        <input type="text" id="emailInputAllUsers" class="allUsersInput" value="{{this.email}}" disabled>
-        <p class="user-role">Role</p>
-        <input type="text" id="roleInputAllUsers" class="allUsersInput" value="{{this.role}}" disabled>
-
-        <p class="user-password">Password</p>
-        <input type="text" id="passwordInputAllUsers" class="allUsersInput" value="" disabled>
-
-        <button id="editButtonAllUsersTab"  onclick="editButton()">Edit</button>
-        <button id="saveButtonAllUsersTab">Save</button>
-        <button id="cancelButtonAllUsersTab">Cancel</button>
+        <p><strong>Name:{{this.name}}</strong></p>
+        <p><strong>Email: {{this.email}}</strong></p>
+        <button id="editButtonAllUsersTab" onclick="editUser('{{this._id}}')">Edit</button>
+        <button id="deleteButtonAllUsersTab">Delete</button>
     </div>
 
     {{/each}}
 
-    <div>
-        <button id="btn-mostrar-mas">Show more</button>
-    </div>
-    <script src="/js/allUsersButtons.js"></script>
+    <button id="showMoreButton">Show more</button>
+
+    <script>
+        function editUser(uid) {
+            window.location.href = `/user/edit/${uid}`;
+        }
+    </script>
 </section>

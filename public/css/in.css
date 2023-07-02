@@ -49,12 +49,22 @@ button:active {
     background-color: #3c9039;
 }
 
-#message {
-    background-color: #e0ffcc;
+button:disabled {
+    background-color: #ccc;
+}
+
+#message, .error-message {
+    background-color: #c55050;
     color: #000000;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#googleSignInButton {
     display: flex;
     justify-content: center;
     align-items: center;

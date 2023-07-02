@@ -81,3 +81,11 @@
 .save-button:hover {
     background-color: #0c87c3;
 }
+
+#googleMessage {
+    color: rgb(53, 53, 185);
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 10px;
+}

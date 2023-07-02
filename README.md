@@ -7,5 +7,6 @@
 email:test16@test.com
 password: 1234567
 
-#Password that passes the regex in the sign up process
-password: w3Unpo<code>t0d0
+#Passwords that passes the regex in the sign up process
+w3Unpo<code>t0d0
+m5Pñla-mula>v1a

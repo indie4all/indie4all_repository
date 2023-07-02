@@ -13,10 +13,10 @@ const dbConnection = async() => {
             useFindAndModify: false
         });
 
-        console.log('DB connection succeed');
+        console.info('DB connection succeed');
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         throw new Error('Cannot connect to the data base');
     }
 }

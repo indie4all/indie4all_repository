@@ -2,7 +2,7 @@ const emailInput = document.getElementById('emailInput');
 const passwordInput = document.getElementById('passowrdInput');
 const emailError = document.getElementById('error-email');
 const passwordError = document.getElementById('error-password');
-var button = document.getElementById('signUpButton');
+var button = document.getElementById('signUpButton') || document.getElementById('saveUserButton')
 
 emailInput.addEventListener('input', validateEmail);
 passwordInput.addEventListener('input', validatePassword);
@@ -12,7 +12,7 @@ function validateEmail() {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!regex.test(email)) {
-    emailError.textContent = 'El email no es válido.';
+    emailError.textContent = 'Invalid email.';
     button.disabled = true;
   } else {
     emailError.textContent = '';
@@ -25,10 +25,18 @@ function validatePassword() {
   const regex = /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$/;
 
   if (!regex.test(password)) {
-    passwordError.textContent = 'La contraseña debe tener al entre 8 y 16 caracteres, al menos un dígito, una minúscula, una mayúscula y al menos un caracter no alfanumérico.';
+    passwordError.textContent = 'The password must have at least 8 and a maximum of 16 characters, at least one digit, one lower case, one upper case and at least one non-alphanumeric character.';
     button.disabled = true;
   } else {
     passwordError.textContent = '';
     button.disabled = false;
   }
 }
+
+showPasswordCheckbox.addEventListener("change", function () {
+  if (this.checked) {
+      passwordInput.type = "text";
+  } else {
+      passwordInput.type = "password";
+  }
+});

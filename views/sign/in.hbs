@@ -2,19 +2,24 @@
 
   <link rel="stylesheet" href="/css/in.css">
 
-  {{#if message}}
-  <div id="message">
-    <p id="message">{{ message }}</p>
+  <div id="errorMessagesDiv">
+    {{#if message}}
+    <div id="message">
+      <p id="message">{{ message }}</p>
+    </div>
+    {{/if}}
   </div>
-  {{/if}}
 
   <h2>Log in</h2>
   <form class="sign-in-form" action="/user/sign/in" method="POST">
     <div class="form-group">
       <label for="email">Email:</label>
-      <input type="text" id="email" name="email" placeholder="Email" required>
+      <input type="text" id="email" name="email" placeholder="Email"
+        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required><br>
+      <span id="error-email" style="color: red;"></span>
     </div>
     <div class="form-group">
+      <br>
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" placeholder="Password" required>
     </div>
@@ -23,4 +28,69 @@
   <div class="text">
     <p>If you don't have a account. <a href="/user/sign/up">Sign Up</a></p>
   </div>
+  <br>
+
+  <div id="googleSignInButton">
+    <div id="g_id_onload" data-client_id="420441003888-mvopejroboqkvj6n95mp6s89ljshbagl.apps.googleusercontent.com"
+      data-auto_prompt="false" data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
+      data-shape="rectangular" data-logo_alignment="left">
+    </div>
+  </div>
+
 </section>
+
+
+
+
+<script>
+  const emailInput = document.getElementById('email');
+  const emailError = document.getElementById('error-email');
+  var button = document.getElementById('signInButton');
+
+  emailInput.addEventListener('input', validateEmail);
+
+  function validateEmail() {
+    const email = emailInput.value;
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regex.test(email)) {
+      emailError.textContent = 'Invalid email.';
+      button.disabled = true;
+    } else {
+      emailError.textContent = '';
+      button.disabled = false;
+    }
+  }
+
+  function handleCredentialResponse(response) {
+    // Google ID Token
+    //console.log('Id google token' + response.credential);
+
+    const body = { id_token: response.credential }
+
+    fetch('/user/sign/google', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+      .then(resp => {
+        if (resp.status == 200) {
+          window.location.href = `/`;
+        } else {
+          const errorDiv = document.getElementById('errorMessagesDiv');
+          const div = document.createElement('div');
+          div.style.wordWrap = 'break-word';
+          div.classList.add('error-message');
+          const errorMessage = 'User blocked - Contact administrator';
+          div.textContent = errorMessage;
+          errorDiv.appendChild(div);
+        }
+      })
+      .catch(console.warn);
+  }
+</script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>

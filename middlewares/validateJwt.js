@@ -17,7 +17,7 @@ const validateJwt = (req, res = response, next) => {
         req.uid = uid;
         next();
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(401).redirect('/user/sign/in');
     }
 }

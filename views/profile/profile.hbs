@@ -20,7 +20,11 @@
         </ul>
 
         <div id="profile" class="tab-content active">
+            {{#if google}}
             {{> user}}
+            {{else}}
+            <p id="googleMessage"><a href="https://myaccount.google.com/" target="_blank" rel="noopener noreferrer">Account managed by Google</a></p>
+            {{/if}}
         </div>
 
         <div id="units" class="tab-content">
@@ -29,8 +33,7 @@
         </div>
 
         <div id="users" class="tab-content">
-            <h2>Contenido del Tab users</h2>
-            <p>Aquí puedes agregar lista de usuarios.</p>
+            <h2>List of all users</h2>
             {{> allUsers}}
         </div>
     </div>

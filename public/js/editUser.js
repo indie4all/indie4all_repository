@@ -6,7 +6,7 @@ const inputs = allInputs.getElementByClassName('allUsersInput');
 
 editButton.addEventListener('click', () => {
     inputs.forEach(input => {
-        console.log(input.nameInput);
+        console.info(input.nameInput);
         input.removeAttribute('readonly');
     });
     saveButton.removeAttribute('disabled');

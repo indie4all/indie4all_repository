@@ -13,7 +13,7 @@ const getJwt = ( uid = '' ) => {
         }, ( err, token ) => {
 
             if ( err ) {
-                console.log(err);
+                console.error(err);
                 reject( 'Cannot create JWT' )
             } else {
                 resolve( token );
