@@ -20,7 +20,7 @@ class Server {
       this.port = process.env.PORT;
       this.usuariosPath = '/';
       this.userPath = '/user'
-      //this.profilePath = '/profile'
+      this.unitPath = '/unit'
 
       this.dbConnect();
 
@@ -39,6 +39,7 @@ class Server {
 
       this.app.use(this.usuariosPath, require('../routes/home'));
       this.app.use(this.userPath, require('../routes/user'));
+      this.app.use(this.unitPath, require('../routes/unit'));
       this.app.set('views', path.join(__dirname, '../views'));
       this.app.use(express.static(path.join(__dirname, '../public')));
 
@@ -77,7 +78,7 @@ class Server {
       });
 
       //Para que nos llegue bien el body de los forms
-      this.app.use(bodyParser.urlencoded({ limit: '5000mb', extended: true, parameterLimit: 100000000000 }));
+      this.app.use(bodyParser.urlencoded({ limit: '50000000000mb', extended: true, parameterLimit: 100000000000 }));
 
       //Para poder setear y recoger cookies
       this.app.use(cookieParser())
