@@ -1,13 +1,22 @@
 const { Router } = require('express');
 const { getUnits,
-    addUnit } = require('../controllers/unit');
+    addUnit,
+    generateContent } = require('../controllers/unit');
 const validateJwt = require('../middlewares/validateJwt');
-const express = require('express');
+const { check } = require('express-validator');
+const { validateFields } = require('../middlewares/validateFields');
 
 const router = Router();
 
-router
-    .get('/all', getUnits)
-    .post('/addUnit', express.json({ limit: '50000000000mb' }), addUnit);
+router.get('/all', [
+    validateJwt,
+    check('page', 'Page parameter should be an integer').isInt(),
+    validateFields
+], getUnits);
+
+router.get('/generate', generateContent);
+
+
+router.post('/addUnit', addUnit); //TO DO
 
 module.exports = router;

@@ -37,9 +37,11 @@
             <label for="password">Password:</label>
             <input type="password" id="passowrdInput" name="password" value="{{user.password}}"
                 pattern="[A-Za-z0-9!?-]{8,12}"><br>
-            <span id="error-password" style="color: red;"></span>
+            <div class="error-password">
+                <span id="error-password" style="color: red;"></span>
+            </div>
             <input type="checkbox" id="showPasswordCheckbox" class="show-password-checkbox">
-            <label for="showPasswordCheckbox" class="show-password-label">Mostrar contraseña</label>
+            <label for="showPasswordCheckbox" class="show-password-label">Show password</label>
             <br>
         </div>
 
@@ -60,9 +62,12 @@
         padding: 20px;
         background-color: #f2f2f2;
         border: 1px solid #ccc;
-        border-radius: 5px;
+        border-radius: 20px;
     }
 
+    #saveUserButton:disabled {
+        background-color: #4d4d4d;
+    }
 
     .form-group {
         margin-bottom: 20px;
@@ -101,5 +106,10 @@
 
     #saveUserButton:hover {
         background-color: #245f27;
+    }
+
+    .error-password {
+        display: block;
+        max-width: 200px;
     }
 </style>

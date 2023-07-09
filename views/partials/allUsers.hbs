@@ -3,24 +3,268 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/usersCards.css">
 
+    <button id="add-user-button">+</button>
 
-    {{> search}}
-    {{#each allUsers}}
-
-    <div class="user-card">
-        <p><strong>Name:{{this.name}}</strong></p>
-        <p><strong>Email: {{this.email}}</strong></p>
-        <button id="editButtonAllUsersTab" onclick="editUser('{{this._id}}')">Edit</button>
-        <button id="deleteButtonAllUsersTab">Delete</button>
+    <div id="user-form" style="display: none;">
+        <!-- Aquí iría tu formulario para rellenar los datos del usuario -->
+        <input type="password">
+        <input type="checkbox">
+        <label>Show password</label>
     </div>
 
-    {{/each}}
 
-    <button id="showMoreButton">Show more</button>
+    <h2>List of all existing users</h2>
+    <p id="userDeletedMessage" style="color: rgb(2, 77, 2)"><strong></strong></p>
 
-    <script>
-        function editUser(uid) {
-            window.location.href = `/user/edit/${uid}`;
-        }
-    </script>
+    <div id="user-card">
+        {{!-- <p><strong>Name:{{this.name}}</strong></p>
+        <p><strong>Email: {{this.email}}</strong></p>
+        <button id="editButtonAllUsersTab" onclick="editUser('{{this._id}}')">Edit</button>
+        <button id="deleteButtonAllUsersTab">Delete</button> --}}
+    </div>
+
+    <div class="pagination">
+        <button class="pagination__button" id="users-previous-button">Previous</button>
+        <span class="pagination__info">Page <span id="users-current-page">1</span></span>
+        <button class="pagination__button" id="users-next-button">Next</button>
+    </div>
+
+
+
 </section>
+
+
+<script>
+
+    let usersCurrentPage = 1;
+    const usersPreviousButton = document.getElementById('users-previous-button');
+    const usersNextButton = document.getElementById('users-next-button');
+    const usersCurrentPageElement = document.getElementById('users-current-page');
+
+    const userDeletedMessage = document.getElementById('userDeletedMessage');
+
+    // Retrieve div where we are going to put the users
+    const usersCardContainer = document.getElementById('user-card');
+
+    usersPreviousButton.addEventListener('click', goToUsersPreviousPage);
+    usersNextButton.addEventListener('click', goToUsersNextPage);
+
+    if (currentPage == 1) {
+        fetchUsers();
+        updateUsersPage();
+    }
+
+    function goToUsersPreviousPage() {
+        if (usersCurrentPage > 1) {
+            usersCurrentPage--;
+            updateUsersPage();
+            fetchUsers();
+        }
+    }
+
+    function goToUsersNextPage() {
+        usersCurrentPage++;
+        updateUsersPage();
+        fetchUsers();
+    }
+
+    function updateUsersPage() {
+        usersCurrentPageElement.textContent = usersCurrentPage;
+        if (usersCurrentPage === 1) {
+            usersPreviousButton.classList.add('hidden');
+        } else {
+            usersPreviousButton.classList.remove('hidden');
+        }
+    }
+
+
+    async function fetchUsers() {
+        try {
+            const response = await fetch(`/user/get/all?page=${usersCurrentPage}`);
+            const allUsers = await response.json();
+
+            if ((allUsers.totalUsersPages - usersCurrentPage) == '0') {
+                usersNextButton.classList.add('hidden');
+            } else {
+                usersNextButton.classList.remove('hidden');
+            }
+
+            //Clean list of units div to put the nex page
+            usersCardContainer.innerHTML = '';
+
+            Array.prototype.forEach.call(allUsers.usersPerPage, user => {
+
+                // Unit element
+                const userCardElement = document.createElement('div');
+                userCardElement.classList.add('card');
+
+                //Name tag
+                const userNameElement = document.createElement('p');
+                userCardElement.appendChild(userNameElement);
+
+                //Email tag
+                const userEmailElement = document.createElement('p');
+                userCardElement.appendChild(userEmailElement);
+
+                //Role tag
+                const roleElement = document.createElement('p');
+                userCardElement.appendChild(roleElement);
+
+                //Status text
+                const statusText = document.createElement('span');
+                userCardElement.appendChild(statusText);
+
+                //Status tag
+                const statusElement = document.createElement('div');
+                userCardElement.appendChild(statusElement);
+                statusElement.setAttribute("id", "userStatus");
+
+
+
+                //Edit user button
+                const editUserButton = document.createElement('button');
+                editUserButton.setAttribute("id", "editButtonAllUsersTab");
+                editUserButton.innerHTML = 'Edit';
+                userCardElement.appendChild(editUserButton);
+                editUserButton.addEventListener("click", function () {
+                    editUser(user.uid);
+                });
+
+                //Delete user button
+                const deleteUserButton = document.createElement('button');
+                deleteUserButton.setAttribute("id", "deleteButtonAllUsersTab");
+                deleteUserButton.innerHTML = 'Delete';
+                userCardElement.appendChild(deleteUserButton);
+                deleteUserButton.addEventListener("click", function () {
+                    var confirmacion = confirm(`Are you sure you want to delete the user: ${user.name} ?`);
+                    if (confirmacion) {
+                        deleteUser(user.uid);
+                    }
+                });
+
+                //Create content
+                userNameElement.textContent = 'Name: ' + user.name;
+                userEmailElement.textContent = 'Email: ' + user.email;
+                roleElement.textContent = 'Role: ' + user.role;
+                statusText.textContent = 'Status: '
+
+                if (user.status) {
+                    setActive();
+                } else {
+                    setInactive()
+                }
+                usersCardContainer.appendChild(userCardElement);
+
+                function setActive() {
+                    statusElement.classList.remove("red");
+                    statusElement.classList.add("green");
+                }
+
+                function setInactive() {
+                    statusElement.classList.remove("green");
+                    statusElement.classList.add("red");
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function editUser(uid) {
+        window.location.href = `/user/edit/${uid}`;
+    }
+
+    async function deleteUser(uid) {
+
+        //Call delete user endpoint
+
+        await fetch(`/user/delete/${uid}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    showDeleteMessage('User deleted succesfully.', 5000);
+                } else {
+                    console.log(`Error while deleting user: ${response.status}  ${response.statusText}`);
+                    showDeleteMessage(`Error while deleting user: ${response.status}  ${response.statusText}`, 5000);
+                }
+            })
+            .catch(error => {
+                console.log('Error while calling user delete endpoint: ', error);
+                showDeleteMessage(`Error while calling user delete endpoint: ${error}`, 5000);
+            });
+    }
+
+    function showDeleteMessage(message, time) {
+        userDeletedMessage.textContent = message;
+        setTimeout(function () {
+            userDeletedMessage.textContent = "";
+        }, time);
+    }
+
+    document.getElementById("add-user-button").addEventListener("click", function () {
+        window.location.href = `/user/add/form`;
+    });
+
+</script>
+
+<style>
+    #userStatus {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin: 10px;
+    }
+
+    .red {
+        background-color: red;
+    }
+
+    .green {
+        background-color: green;
+    }
+
+    .add-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        font-weight: bold;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #add-user-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgb(166, 238, 214);
+        color: #fff;
+        font-size: 24px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        display: none;
+    }
+
+    .allUsersSection {
+        position: relative;
+        padding: 20px;
+        background-color: #f2f2f2;
+    }
+
+    .allUsersSection:hover #add-user-button{
+        display: block;
+    }
+</style>

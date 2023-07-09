@@ -1,12 +1,13 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const UnitSchema = Schema({
     version: {
-        type: Schema.Types.Mixed,
+        type: Number,
         required: [true, 'Version is mandatory']
     },
     sections: {
-        type: String,
+        type: Schema.Types.Mixed,
         required: [true, 'Some content is needed in sections part'],
     },
     resourceId: {
@@ -65,5 +66,5 @@ const UnitSchema = Schema({
     }
 });
 
-
+UnitSchema.plugin(mongoosePaginate);
 module.exports = model( 'Unit', UnitSchema );

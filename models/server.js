@@ -19,8 +19,9 @@ class Server {
       this.app = express();
       this.port = process.env.PORT;
       this.usuariosPath = '/';
-      this.userPath = '/user'
-      this.unitPath = '/unit'
+      this.userPath = '/user';
+      this.unitPath = '/unit';
+      this.legalPath = '/legal';
 
       this.dbConnect();
 
@@ -40,6 +41,8 @@ class Server {
       this.app.use(this.usuariosPath, require('../routes/home'));
       this.app.use(this.userPath, require('../routes/user'));
       this.app.use(this.unitPath, require('../routes/unit'));
+      this.app.use(this.legalPath, require('../routes/legal'));
+
       this.app.set('views', path.join(__dirname, '../views'));
       this.app.use(express.static(path.join(__dirname, '../public')));
 

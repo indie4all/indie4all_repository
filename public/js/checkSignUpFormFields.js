@@ -25,7 +25,7 @@ function validatePassword() {
   const regex = /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$/;
 
   if (!regex.test(password)) {
-    passwordError.textContent = 'The password must have at least 8 and a maximum of 16 characters, at least one digit, one lower case, one upper case and at least one non-alphanumeric character.';
+    passwordError.textContent = 'The password must have between 8 and 16 chars including a digit, lower and uppder case and a non-alphanumeric character.';
     button.disabled = true;
   } else {
     passwordError.textContent = '';

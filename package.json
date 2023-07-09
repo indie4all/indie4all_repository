@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "dev": "nodemon --config nodemon.json app.js",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +14,7 @@
   "dependencies": {
     "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
+    "child_process": "^1.0.2",
     "console-stamp": "^3.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "2.8.5",
@@ -20,12 +22,15 @@
     "express": "4.17.1",
     "express-handlebars": "^3.0.2",
     "express-validator": "^6.9.2",
+    "fs": "^0.0.1-security",
     "google-auth-library": "^8.9.0",
     "handlebars": "^4.7.7",
     "hbs": "^4.2.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.15",
-    "nodemon": "2.0.21"
+    "mongoose-paginate-v2": "^1.7.1",
+    "nodemon": "2.0.21",
+    "parcel-bundler": "^1.12.5"
   }
 }

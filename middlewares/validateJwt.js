@@ -18,6 +18,7 @@ const validateJwt = (req, res = response, next) => {
         next();
     } catch (error) {
         console.error(error);
+        res.clearCookie('token');
         return res.status(401).redirect('/user/sign/in');
     }
 }

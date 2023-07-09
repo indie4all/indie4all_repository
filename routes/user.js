@@ -7,10 +7,15 @@ const { getSignInPage,
     getEditUserForm,
     editUser,
     getUser,
-    googleSignIn } = require('../controllers/sign');
+    googleSignIn,
+    getAllUsers,
+    deleteUser,
+    getAddUserForm,
+    addNewUser } = require('../controllers/sign');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validateFields');
 const validateJwt = require('../middlewares/validateJwt');
+const {findUserById, isAdminRole, emailExists } = require('../helpers/dbValidators');
 
 const router = Router();
 
@@ -58,12 +63,32 @@ router.post('/edit/:id', [
 ], editUser)
 
 
-//Retrieve certain user data
-router.get('/:id', [
+//Get all users end-point
+router.get('/get/all', [
     validateJwt,
-    check('id', 'Not valid ID').isMongoId(),
+    check('page', 'Page parameter should be an integer').isInt(),
     validateFields
-], getUser)
+], getAllUsers);
+
+//Delete user end-points
+router.delete('/delete/:id', [
+    validateJwt,
+    check('id', 'Misssing User Id').not().isEmpty(),
+    check('id', 'Not valid ID').isMongoId(),
+    check('id').custom( findUserById ),
+    validateFields
+], deleteUser);
+
+//Get add user form
+router.get('/add/form', [
+    validateJwt,
+    check('id').custom( isAdminRole ),
+], getAddUserForm);
+
+//Get add user form
+router.post('/add-user', [
+    validateJwt,
+], addNewUser);
 
 
 module.exports = router;

@@ -1,13 +1,154 @@
-<link rel="stylesheet" href="/css/userProfile.css">
 <div class="profile-section">
-    <h2>Units</h2>
 
+    <div id="listOfUnits">
+    </div>
 
 </div>
+<div class="pagination">
+    <button class="pagination__button" id="previous-button">Previous</button>
+    <span class="pagination__info">Page <span id="current-page">1</span></span>
+    <button class="pagination__button" id="next-button">Next</button>
+</div>
+
+
 
 <script>
-    
-    
+
+    const previousButton = document.getElementById('previous-button');
+    const nextButton = document.getElementById('next-button');
+    const currentPageElement = document.getElementById('current-page');
+
+    // Agregar la tarjeta al contenedor
+    const tarjetaContainer = document.getElementById('listOfUnits');
+
+    let currentPage = 1;
+
+    previousButton.addEventListener('click', goToPreviousPage);
+    nextButton.addEventListener('click', goToNextPage);
+
+    if (currentPage == 1) {
+        fetchUnits();
+        updatePage();
+    }
+
+    function goToPreviousPage() {
+        if (currentPage > 1) {
+
+            currentPage--;
+            updatePage();
+            fetchUnits();
+
+            // Lógica adicional para cargar los datos de la página anterior
+        }
+    }
+
+    function goToNextPage() {
+
+        currentPage++;
+        updatePage();
+        fetchUnits();
+        // Lógica adicional para cargar los datos de la página siguiente
+    }
+
+    function updatePage() {
+        currentPageElement.textContent = currentPage;
+        if (currentPage === 1) {
+            previousButton.classList.add('hidden');
+        } else {
+            previousButton.classList.remove('hidden');
+        }
+    }
+
+    async function fetchUnits() {
+        try {
+            const response = await fetch(`/unit/all?page=${currentPage}`);
+            const unitsPerPage = await response.json();
+
+            if ((unitsPerPage.totalPages - currentPage) == '0') {
+                nextButton.classList.add('hidden');
+            } else {
+                nextButton.classList.remove('hidden');
+            }
+
+            //Clean list of units div to put the nex page
+            tarjetaContainer.innerHTML = '';
+
+            Array.prototype.forEach.call(unitsPerPage.allUnits, unit => {
+
+                // Crear elemento de unidad
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('card');
+
+                const imageElement = document.createElement('img');
+                cardElement.appendChild(imageElement);
+
+                // Crear contenido de la tarjeta
+                const nameElement = document.createElement('p');
+                cardElement.appendChild(nameElement);
+
+                const emailElement = document.createElement('p');
+                //emailElement.textContent = email;
+                cardElement.appendChild(emailElement);
+
+                const institutionElement = document.createElement('p');
+                //institutionElement.textContent = institution;
+                cardElement.appendChild(institutionElement);
+
+                imageElement.src = unit.cover;
+                nameElement.textContent = 'Title: ' + unit.title;
+                emailElement.textContent = 'Email: ' + unit.email;
+                institutionElement.textContent = 'Institution: ' + unit.institution;
+                tarjetaContainer.appendChild(cardElement);
+
+            });
+
+            // Lógica adicional para procesar los usuarios obtenidos
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
 
 </script>
+
+
+<style>
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination__button {
+        background-color: #f1f1f1;
+        border: none;
+        color: #555;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .pagination__info {
+        margin: 0 10px;
+    }
+
+    .pagination__button:hover {
+        background-color: #ddd;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #listOfUnits img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+    }
+
+</style>

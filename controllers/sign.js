@@ -4,13 +4,14 @@ const { getJwt } = require('../helpers/getJwt');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const { googleVerify } = require('../helpers/googleVerify');
+const axios = require('axios');
 
 const getSignInPage = async (req = request, res = response) => {
     console.info('Rendering sign in page')
 
     //Tengo que ver si estoy logeado -> si existe token
-    const {token} = req.cookies;
-    if (token){
+    const { token } = req.cookies;
+    if (token) {
         return res.redirect('/');
     }
 
@@ -20,8 +21,8 @@ const getSignInPage = async (req = request, res = response) => {
 const getSignUpPage = async (req = request, res = response) => {
     console.info('Rendering sign up page')
 
-    const {token} = req.cookies;
-    if (token){
+    const { token } = req.cookies;
+    if (token) {
         return res.redirect('/');
     }
     res.render('sign/up', { layout: 'layout' })
@@ -98,11 +99,10 @@ const signUpNewUser = async (req = request, res = response) => {
 }
 
 const getProfile = async (req = request, res = response) => {
-    console.info('Rendering profile page')
+    console.info('Rendering profile page');
 
     //Retrieve the user role
     const loggedInUser = await User.findOne({ '_id': req.uid }).lean();
-    console.info(loggedInUser);
 
     //Check if the user is admin and have access to 'Users' tab
     let admin = false;
@@ -110,16 +110,15 @@ const getProfile = async (req = request, res = response) => {
         admin = true;
     }
 
-
     //Retrieve all the users
-    const allUsers = await User.find({}).lean();
+    //const allUsers = await User.find({}).lean();
 
     res.render('profile/profile', {
         layout: 'layout',
-        allUsers: allUsers,
+        //allUsers: allUsers,
         admin: admin,
         loggedInUser: loggedInUser,
-        google: !loggedInUser.google
+        google: !loggedInUser.google,
     })
 }
 
@@ -169,13 +168,10 @@ const editUser = async (req = request, res = response) => {
 
 const getUser = async (req = request, res = response) => {
     const uid = req.params.id;
-    console.info('GET USER ENDPOINT' + uid);
 
     res.json({
         uid: uid
     })
-
-
 }
 
 
@@ -223,7 +219,7 @@ const googleSignIn = async (req = request, res = response) => {
         return res.status(200).json({
             msg: 'Google user logged in succesfully.',
         });
-            
+
     } catch (error) {
         return res.status(500).redirect('/');
     }
@@ -231,7 +227,90 @@ const googleSignIn = async (req = request, res = response) => {
 
 }
 
+const getAllUsers = async (req = request, res = response) => {
+    console.info('Getting all the users...');
 
+    //Retreieve page number from params
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const { docs, totalDocs, totalPages } = await User.paginate({}, { page, limit });
+
+    //Retrieve paginated users
+    res.json({
+        usersPerPage: docs,
+        totalUsersPages: totalPages,
+        currentUsersPage: page
+    });
+}
+
+const deleteUser = async (req = request, res = response) => {
+    console.info('Deleting user...');
+
+    const uid = req.params.id;
+    const user = await User.findOneAndDelete(uid);
+
+    res.json({
+        user,
+    });
+}
+
+const getAddUserForm = async (req = request, res = response) => {
+    console.info('Retrieving form to add new user...');
+
+    res.render('addUser/addUser', { layout: 'layout' })
+}
+
+
+const addNewUser = async (req = request, res = response) => {
+    console.info('Adding new user...');
+
+    const newUser = {
+        name: req.body.name,
+        email: req.body.email,
+        role: req.body.role,
+        status: req.body.status,
+        password: req.body.password
+    };
+
+    const emailExists = await User.findOne({ 'email': newUser.email });
+
+
+    if (emailExists) {
+        if (emailExists.status) {
+            res.render('addUser/addUser', {
+                layout: 'layout',
+                message: 'User already exists',
+                error: true
+            });
+        } else {
+            res.render('addUser/addUser', {
+                layout: 'layout',
+                message: 'User already exists but it is blocked',
+                error: true
+            });
+        }
+    }
+
+    //Create the new user to save it with USER_ROLE by default
+    const user = new User(newUser);
+
+    //Encrypt password
+    const salt = bcryptjs.genSaltSync();
+    user.password = bcryptjs.hashSync(user.password, salt);
+
+    //Save in the database
+    await user.save().then(() => {
+        res.render('addUser/addUser', {
+            layout: 'layout',
+            message: 'User added correctly',
+            error: false
+        });
+        console.info('User added correctly');
+    }).catch(error => {
+        console.error(error);
+    });
+}
 module.exports = {
     getSignInPage,
     getSignUpPage,
@@ -241,5 +320,9 @@ module.exports = {
     getEditUserForm,
     editUser,
     getUser,
-    googleSignIn
+    googleSignIn,
+    getAllUsers,
+    deleteUser,
+    getAddUserForm,
+    addNewUser
 }

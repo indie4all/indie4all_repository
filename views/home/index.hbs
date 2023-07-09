@@ -1,15 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INDIeOpen</title>
-</head>
-<body>
+<html>
 
-    <div>
-        <h2>Esto es mi home</h2>
+<head>
+    <title>Bienvenido/a</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 60vh;
+            margin: 0 auto;
+            padding: 40px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            align-items: center !important;
+        }
+
+        .left-home-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-right: 20px;
+        }
+
+        .right-home-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            color: #666;
+            font-size: 2rem;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .left-image {
+            width: 60%;
+            height: 60%;
+        }
+
+        .right-image {
+            width: 80%;
+            height: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-home-section">
+            <img src="/assets/img/main-indie-logo.png" alt="Imagen izquierda" class="left-image">
+
+            <p>Crea, enseña y aprende con una plataforma de contenido digital interactivo e inclusivo para compartir,
+                reutilizar e innovar en el aula.</p>
+        </div>
+        <div class="right-home-section">
+            <img src="/assets/img/main-image.png" alt="Imagen derecha" class="right-image">
+        </div>
     </div>
-    
 </body>
+
 </html>
