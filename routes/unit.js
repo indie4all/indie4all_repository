@@ -5,6 +5,7 @@ const { getUnits,
 const validateJwt = require('../middlewares/validateJwt');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validateFields');
+const {findUnitById} = require('../helpers/dbValidators');
 
 const router = Router();
 
@@ -14,8 +15,9 @@ router.get('/all', [
     validateFields
 ], getUnits);
 
-router.get('/generate', generateContent);
-
+router.get('/generatecontent/:resourceId',[
+    validateJwt,
+], generateContent);
 
 router.post('/addUnit', addUnit); //TO DO
 

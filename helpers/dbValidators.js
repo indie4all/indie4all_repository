@@ -40,12 +40,22 @@ const findUserById = async (id) => {
     }
 }
 
+const findUnitById = async (id) => {
+
+    const unitExists = await Unit.findById(id);
+    if (!unitExists) {
+        throw new Error(`Id: ${id} does not exists`);
+    }
+}
+
+
 
 
 module.exports = {
     isValidRole,
     emailExists,
     findUserById,
-    isAdminRole
+    isAdminRole,
+    findUnitById
 }
 

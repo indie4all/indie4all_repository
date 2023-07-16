@@ -94,6 +94,27 @@
                 //institutionElement.textContent = institution;
                 cardElement.appendChild(institutionElement);
 
+                //Boton de editar unidad
+                const editUnitButton = document.createElement('button');
+                editUnitButton.id = "editUnitButton";
+                editUnitButton.textContent = 'Edit';
+                cardElement.appendChild(editUnitButton);
+
+                //Boton de eliminar unidad
+                const deleteUnitButton = document.createElement('button');
+                deleteUnitButton.id = "deleteUnitButton";
+                deleteUnitButton.textContent = 'Delete';
+                cardElement.appendChild(deleteUnitButton);
+
+                //Boton de visualizar unidad
+                const viewUnitButton = document.createElement('button');
+                viewUnitButton.id = "viewUnitButton";
+                viewUnitButton.textContent = 'View';
+                cardElement.appendChild(viewUnitButton);
+                viewUnitButton.addEventListener("click", function () {
+                    viewUnit(unit.resourceId);
+                });
+
                 imageElement.src = unit.cover;
                 nameElement.textContent = 'Title: ' + unit.title;
                 emailElement.textContent = 'Email: ' + unit.email;
@@ -108,6 +129,13 @@
         }
     }
 
+    const viewUnit = async (resourceId) => {
+        console.log(resourceId);
+        const generateUnit = await fetch(`/unit/generatecontent?resourceId=${resourceId}`);
+        
+        const generateUnitJson = await generateUnit.json();
+        console.log(generateUnitJson)
+    }
 
 </script>
 
@@ -150,5 +178,4 @@
         width: auto;
         height: auto;
     }
-
 </style>
