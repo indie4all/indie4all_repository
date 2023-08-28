@@ -6,6 +6,7 @@ const bcryptjs = require('bcryptjs');
 const { googleVerify } = require('../helpers/googleVerify');
 const axios = require('axios');
 const path = require('path');
+const fs = require('fs-extra');
 
 const getSignInPage = async (req = request, res = response) => {
     console.info('Rendering sign in page')
@@ -149,7 +150,7 @@ const editUser = async (req = request, res = response) => {
     const imagePath = req.file ? req.file.path : 'public\\assets\\usersImgs\\default-user-image.jpg';
 
     const basePath = 'public';
-    
+
     let relativeImagePath;
     if (!req.file) {
 
@@ -284,9 +285,25 @@ const deleteUser = async (req = request, res = response) => {
     console.info('Deleting user...');
 
     const uid = req.params.id;
-    console.log('Me llega el uid siguiente: ' + uid);
 
     const user = await User.findByIdAndDelete(uid);
+
+    if (user.image != '/assets/usersImgs/default-user-image.jpg') {
+
+        //********* BORRAR TAMBIEN LA FOTO DE PERFIL SI ES DIFERENTE A LA DEFAULT *********//
+        const imagePath = user.image;
+        const basePath = 'public';
+        const completePath = path.join(basePath, imagePath);
+
+        fs.unlink(completePath, (err) => {
+            if (err) {
+                console.error('Error while deleting profile image', err);
+            } else {
+                console.log('Profile image deleted succesfully');
+            }
+        });
+
+    }
 
     res.json({
         user,

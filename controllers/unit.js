@@ -44,9 +44,9 @@ const addUnit = async (req = request, res = response) => {
 
     const unit = await Unit.findOne({ 'resourceId': resourceId }).lean();
 
-    if(unit) {
+    if (unit) {
         console.log('Unidad');
-    }else {
+    } else {
         console.log();
 
     }
@@ -66,6 +66,23 @@ const deleteUnit = async (req = request, res = response) => {
 
     const resourceId = req.query.resourceId;
     const unit = await Unit.findOneAndDelete({ 'resourceId': resourceId });
+
+
+    //Borrar carpeta de la unidad generada si existe:
+    const unitPath = path.join('public', resourceId);
+    const directoryExists = fs.existsSync(unitPath);
+
+    if (directoryExists) {
+        fs.remove(unitPath)
+            .then(() => {
+                console.log('Directory and its contents successfully deleted.');
+            })
+            .catch((err) => {
+                console.error('Error deleting directory:', err);
+            });
+    } else {
+        console.log('Directory does not exist.');
+    }
 
     res.json({
         unit: unit
