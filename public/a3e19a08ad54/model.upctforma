@@ -1,0 +1,171 @@
+ContentDefinition 'UD' { 
+    package upctforma.UD;  
+    types {
+        TextType,
+        VideoType,
+        ImageType,
+        GameType,
+        IntType,
+        Any,
+        Tab{ name: TextType, content: ContentGroup },
+        DragAndDrop{ name: ImageType, content: ImageType, solution: ImageType },
+        DragAndDropTextual{ term: TextType, definition: TextType },
+        ContentGroup { list_of Any },
+        TabList { list_of Tab},
+        ImageList{list_of ImageType},
+        DragAndDropList{list_of DragAndDrop},
+        TextualDragAndDropList{list_of DragAndDropTextual},
+        widget ImageTextOver{ ImageType, TextType },
+        widget ImageTextRight{ ImageType, TextType },
+        widget VerticalAccordion{ TabList },
+        widget HorizontalTabs{ TabList },
+        Animation{ awidht: TextType, background: ImageType, images: ImageList, aheight: TextType },
+        widget AnimationInOut{ Animation },
+        widget RectangleDragAndDrop{ DragAndDropList },
+        widget TextualDragAndDrop{ TextualDragAndDropList },
+        AudioTerm { URL : TextType, term: TextType, definition: TextType, textTracks: TextType },
+        AudioTermList { list_of AudioTerm },
+        widget ContainerAudioTerm { AudioTermList },
+        ResponseList{ list_of TextType },
+        AnswerList{ list_of IntType },
+        Test { question: TextType, response: ResponseList, correct: Any, positiveFeedback: TextType, negativeFeedback: TextType },
+        TestList { list_of Test },
+        widget ContainerTest { TestList },
+        ChooseOptionRecord { questionText: TextType, questionImage: ImageType, response1: TextType, response2: TextType, response3: TextType, response4: TextType, correct: IntType },
+        widget ChooseOption { ChooseOptionRecord },
+        ImageSoundRecord { contentText: TextType, contentImage: ImageType, sound: TextType, textTracks: TextType },
+        ImageSoundList { list_of ImageSoundRecord },
+        widget ImageSound { ImageSoundList },
+        CouplesRecord { contentText: TextType, contentImage: ImageType },
+        CouplesList { list_of CouplesRecord },
+        widget Couples { CouplesList },
+        ListSchema { list_of ImageType },
+        widget Schema { ListSchema },
+        ModalRecord { name: TextType, content: ContentGroup },
+        widget ModalButton { ModalRecord },
+        TrueFalse { question: TextType, correct: TextType, positiveFeedback: TextType, negativeFeedback: TextType },
+        TrueFalseList { list_of TrueFalse }, 
+        widget ContainerTrueFalse { TrueFalseList },
+        TextList { list_of TextType }, 
+        ColumnRecord { heading: TextType, content: TextList}, 
+        ColumnsList { list_of ColumnRecord },
+        widget MatchColumns { ColumnsList },
+        PuzzlePiece {x: IntType,y: IntType,wdth: IntType,hght: IntType,altImg: TextType,altRec: TextType},
+        PuzzlePiecesContainer { list_of PuzzlePiece },
+        PuzzleContainer { background: ImageType, pieces: PuzzlePiecesContainer },
+        widget Puzzle { PuzzleContainer },
+        widget Animation { PuzzleContainer },
+        MissingSolutions { list_of TextType },
+        MissingSentence {sentence: TextType, combinations: MissingSolutions },
+        MissingSentencesList { list_of MissingSentence },
+        widget MissingWords { MissingSentencesList },
+        CorrectWordRecord { question: TextType, image: ImageType, answer: TextType },
+        CorrectWordRecords { list_of CorrectWordRecord },
+        widget CorrectWord {CorrectWordRecords},
+        ButtonTextRecord { image: ImageType, text: TextType},
+        ButtonTextList { list_of ButtonTextRecord },
+        widget ButtonText { ButtonTextList },
+        SentenceOrderWordList { list_of TextType },
+        SentenceOrderSolutionList { list_of TextType },
+        SentenceOrderRecord { solutions: SentenceOrderSolutionList, words: SentenceOrderWordList },
+        SentenceOrderContainer { list_of SentenceOrderRecord },
+        widget SentenceOrder { SentenceOrderContainer },
+        HangmanRecord { question: TextType, solution: TextType, attempts: IntType },
+        widget Hangman { HangmanRecord },
+        RowElement { list_of TextType },
+        RowList { list_of RowElement},
+        ColumnsList { list_of TextType },
+        TableRecord { columns: ColumnsList, rows: RowList },
+        widget Table { TableRecord },
+        widget RelatedUnitItem { TextType },
+        RelatedUnitsAssociationList { list_of RelatedUnitItem },
+        widget RelatedUnitsAssociation { RelatedUnitsAssociationList },
+        RelatedUnitsList {list_of Any },
+        widget RelatedUnits { RelatedUnitsList },
+        CalloutRecord { style: TextType, color: TextType, animation: TextType, content: ContentGroup },
+        widget Callout { CalloutRecord }
+    }
+    Unit 'La música como expresión cultural y social' 'Bilal Aniba El Hasnaoui' Local ES PRIVATE 'bilalanibahasnaoui@gmail.com' 'UPCT' 'Custom' 'a3e19a08ad54' 0 { 
+        Section 'Música' { 
+            title 'Introducción' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>La música no solo es un medio artístico para el entretenimiento, sino también una forma poderosa de expresión que refleja la cultura, los valores y las identidades de las sociedades en todo el mundo. A lo largo de la historia, la música ha desempeñado un papel crucial en la construcción de comunidades y en la transmisión de mensajes sociales y políticos.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Música' { 
+            title 'La música como reflejo cultural' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong>Identidad cultural:</strong> La música es un componente clave de la identidad cultural de un grupo o sociedad. A través de la música, se transmiten tradiciones, lenguaje, historias y valores compartidos.
+                                </p><p><strong>Folklore y música tradicional:</strong> Las canciones y melodías transmitidas de generación en generación reflejan la historia y las experiencias de una comunidad. La música tradicional se adapta y evoluciona, pero mantiene conexiones con el pasado</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Música' { 
+            title 'Música y rituales' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong>Rituales religiosos:</strong> La música desempeña un papel importante en las ceremonias religiosas en muchas culturas, agregando un componente emotivo y espiritual a los rituales.
+                                </p><p><strong>Rituales sociales: </strong>En celebraciones y eventos sociales, la música une a las personas y crea un sentido de comunidad y pertenencia.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Música' { 
+            title 'Música y cambio social' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong style="">Protesta y activismo</strong><em>:</em> A lo largo de la historia, la música ha sido utilizada como herramienta de protesta y cambio social. Las canciones han abordado temas como los derechos civiles, la igualdad de género y la justicia.
+                                </p><p><strong>Canciones políticas:</strong> Las canciones políticas pueden movilizar a las masas, transmitir mensajes políticos y llevar a la conciencia pública temas importantes.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Música' { 
+            title 'Música globalizada' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong>Fusión cultural:</strong> En un mundo cada vez más globalizado, la música actúa como un puente entre culturas. La fusión de géneros y estilos musicales de diferentes regiones crea una amalgama de influencias culturales.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Música' { 
+            title 'Música y emociones' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong>Emotividad: </strong>La música tiene la capacidad de evocar emociones profundas en las personas. Puede ser utilizada para expresar sentimientos de amor, alegría, tristeza y nostalgia.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Música' { 
+            title 'Innovación y experimentación' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong>Exploración sonora</strong>: Los músicos a menudo utilizan la música para explorar nuevos sonidos y técnicas, desafiando las expectativas y creando obras únicas y vanguardistas.
+                                </p><p>La música es una ventana a las culturas y sociedades de todo el mundo. A través de su diversidad y su capacidad para tocar las fibras emocionales, la música nos conecta con la experiencia humana universal y nos permite apreciar la riqueza y la complejidad de la expresión cultural y social.</p>'
+                            } 
+                } 
+            }
+        }
+    } 
+}    

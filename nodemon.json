@@ -4,7 +4,7 @@
         ".git",
         "node_modules/**/node_modules",
         "unit.json",
-        "/controllers"
+        "/public"
     ],
     "verbose": true,
     "execMap": {

@@ -1,7 +1,98 @@
-<header>
-    <h1 class="title"><a href="/">INDIeOpen</a></h1>
-    <div class="logo">
-        <a href="/user/profile"><img src="/assets/img/login-logo.png" alt="Logo"></a>
-    </div>
-</header>
-<hr>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+<main>
+  <div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4">
+      <div class="col-md-3 mb-2 mb-md-0">
+        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+          <img src="/assets/img/main-indie-logo.png" class="img-fluid" alt="...">
+        </a>
+      </div>
+
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0" id="headerOptions">
+        <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+        <li><a href="/user/profile" class="nav-link px-2">Profile</a></li>
+        <li><a href="/unit/showAll" class="nav-link px-2">Units</a></li>
+        <li><a href="/user/all/page" class="nav-link px-2" id="usersBtn">Users</a></li>
+      </ul>
+
+      <div class="col-md-3 text-end" id="signButtons">
+        <button type="button" class="btn btn-outline-primary me-2"
+          onclick="location.href='/user/sign/in'">Login</button>
+        <button type="button" class="btn btn-outline-primary" onclick="location.href='/user/sign/up'">Sign-up</button>
+      </div>
+    </header>
+  </div>
+</main>
+
+<script>
+
+  //Si no hay token = no esta logeado -> no mostrar la lista de menus
+  fetch('/user/iflogged')
+    .then(response => response.json())
+    .then(data => {
+      if (!data.isLoggedIn) {
+        // No esta loggeado: no mostrar home, menu, etc
+        const headerOptions = document.getElementById('headerOptions');
+        headerOptions.remove();
+
+      } else {
+        // Si esta loggeado: no mostrar sign buttons
+        const signButtons = document.getElementById('signButtons');
+        signButtons.remove();
+        checkUserRole();
+      }
+    })
+    .catch(error => console.error(error));
+
+  async function checkUserRole() {
+    //Get user: para saber role y ver si mostrar users o no
+    const usersButton = document.getElementById("usersBtn");
+    const currentUser = await getUser();
+    if (currentUser.role !== 'ADMIN_ROLE') {
+      usersButton.remove();
+    }
+  }
+
+  async function getUser() {
+    const response = await fetch(`/user/current`);
+    const loggedInUser = await response.json();
+    return loggedInUser.currentUser;
+  }
+
+</script>
+
+<style>
+  body {
+    background-image: url('/assets/img/cropped-book.jpg');
+    background-image: no-repeat;
+    background-image: fixed;
+    background-image: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+
+  .btn {
+    background-color: #D41857;
+    border-color: #D41857;
+  }
+
+  .btn:hover {
+    background-color: #D41857;
+    border-color: #D41857;
+    filter: brightness(90%);
+  }
+
+  .btn-outline-primary {
+    border-color: #D41857;
+    color: #D41857;
+    background-color: transparent;
+  }
+</style>

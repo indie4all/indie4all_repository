@@ -1,0 +1,249 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+
+<div class="container">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/usersCards.css">
+
+    <div class="alert alert-success" id="alertContainer" role="alert">
+        {{ message }}
+    </div>
+
+
+
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" id="add-user-button">Add user</button>
+    </div><br>
+
+    <div id="user-card" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+    </div>
+
+    <div class="pagination">
+        <button class="pagination__button" id="previous-button">Previous</button>
+        <span class="pagination__info">Page <span id="current-page">1</span></span>
+        <button class="pagination__button" id="next-button">Next</button>
+    </div>
+
+</div>
+
+<script>
+
+
+
+    const alertDiv = document.getElementById("alertContainer");
+
+    function hideAlert() {
+        alertDiv.style.display = "none";
+    }
+    setTimeout(hideAlert, 3000);
+
+    let currentPage = 1;
+    const previousButton = document.getElementById('previous-button');
+    const nextButton = document.getElementById('next-button');
+    const currentPageElement = document.getElementById('current-page');
+
+    // Retrieve div where we are going to put the users
+    const usersCardContainer = document.getElementById('user-card');
+
+    previousButton.addEventListener('click', goToUsersPreviousPage);
+    nextButton.addEventListener('click', goToUsersNextPage);
+
+    if (currentPage == 1) {
+        updateUsersPage();
+        fetchUsers();
+    }
+
+    function goToUsersPreviousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            updateUsersPage();
+            fetchUsers();
+        }
+    }
+
+    function goToUsersNextPage() {
+        currentPage++;
+        updateUsersPage();
+        fetchUsers();
+    }
+
+    function updateUsersPage() {
+        currentPageElement.textContent = currentPage;
+        if (currentPage === 1) {
+            previousButton.classList.add('hidden');
+        } else {
+            previousButton.classList.remove('hidden');
+        }
+    }
+
+    async function fetchUsers() {
+        try {
+            const response = await fetch(`/user/get/all?page=${currentPage}`);
+            const allUsers = await response.json();
+
+            if ((allUsers.totalUsersPages - currentPage) == '0') {
+                nextButton.classList.add('hidden');
+            } else {
+                nextButton.classList.remove('hidden');
+            }
+
+            //Clean list of units div to put the nex page
+            usersCardContainer.innerHTML = '';
+
+            Array.prototype.forEach.call(allUsers.usersPerPage, user => {
+
+                const cardContentCode = `
+                    <div class="card mb-3" style="max-width: 540px;" id="user">
+                        <div class="row g-0">
+                            <div class="col-md-4 fill">
+                                <img src="${user.image}" class="img-fluid" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</h5>
+                                    <p class="card-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.email}</p>
+                                    <p class="card-text">Role: ${user.role}</p>
+                                    <p class="card-text">Active: ${user.status}</p>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-primary" onclick="editUser('${user.uid}')">Edit</button>
+                                        <button type="button" class="btn btn-primary" onclick="deleteUser('${user.uid}')">Delete</button>
+                                    </div>
+                                </div>                                
+                            </div>                            
+                        </div>
+                    </div>`;
+
+                //Creo el elemento y le pongo el codigo hmtl de arriba
+                const colElement = document.createElement('div');
+                colElement.classList.add('col');
+                colElement.innerHTML = cardContentCode;
+
+                //Coloco el padre en mi div que contendrá todas las unidades
+                usersCardContainer.appendChild(colElement);
+
+            });
+
+            // Scroll to the top of the page when finish fetching new users
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function editUser(uid) {
+        window.location.href = `/user/edit/${uid}`;
+    }
+
+    async function deleteUser(uid) {
+
+        //Call delete user endpoint
+
+        await fetch(`/user/delete/${uid}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    showNotification('User deleted succesfully.', 'success');
+                } else {
+                    console.log(`Error while deleting user: ${response.status}  ${response.statusText}`);
+                    showNotification(`Could not delete user correctly`, 'error');
+                }
+            })
+            .catch(error => {
+                console.log('Error while calling user delete endpoint: ', error);
+                showNotification(`Could not delete user correctly`, 'error');
+            });
+    }
+
+    function showNotification(message, type) {
+        Swal.fire({
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2000
+        }).then(() => {
+            window.location.reload(true);
+        });
+    }
+
+    document.getElementById("add-user-button").addEventListener("click", function () {
+        window.location.href = `/user/add/form`;
+    });
+
+</script>
+
+<style>
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination__button {
+        background-color: #f1f1f1;
+        border: none;
+        color: #555;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .pagination__info {
+        margin: 0 10px;
+    }
+
+    .pagination__button:hover {
+        background-color: #ddd;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #userStatus {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin: 10px;
+    }
+
+    .red {
+        background-color: red;
+    }
+
+    .green {
+        background-color: green;
+    }
+
+    #user {
+        background-color: white;
+    }
+
+    .fill {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .fill img {
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: cover;
+    }
+
+    #alertContainer {
+        display: none;
+    }
+</style>

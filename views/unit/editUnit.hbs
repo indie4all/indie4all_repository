@@ -1,0 +1,40 @@
+<form method="POST" action="/unit/edit/{{unit.resourceId}}">
+
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title" value="{{unit.title}}" required><br><br>
+
+    {{#isEqual unit.theme "Custom"}}
+    <label for="imageUpload">Cover:</label><br>
+    <img src="{{unit.cover}}"><br><br>
+    <input type="file" name="imageUpload" id="imageUpload" accept="image/jpeg, image/png"
+        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"><br><br>
+    {{/isEqual}}
+
+    <label for="user">User:</label><br>
+    <input type="text" id="user" name="user" value="{{unit.user}}" required><br><br>
+
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" value="{{unit.email}}"
+        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required><br><br>
+    <span id="error-email" style="color: red;"></span>
+
+    <label for="institution">Institution:</label><br>
+    <input type="text" id="institution" name="institution" value="{{unit.institution}}" required><br><br>
+
+    <label for="language">Language:</label><br>
+    <select id="language" name="language">
+        <option value="">Select a language</option>
+        <option value="EN" {{#isEqual unit.language "EN" }}selected{{/isEqual}}>English</option>
+        <option value="ES" {{#isEqual unit.language "ES" }}selected{{/isEqual}}>Spanish</option>
+        <option value="FR" {{#isEqual unit.language "FR" }}selected{{/isEqual}}>French</option>
+        <option value="EL" {{#isEqual unit.language "EL" }}selected{{/isEqual}}>Greek</option>
+        <option value="LT" {{#isEqual unit.language "LT" }}selected{{/isEqual}}>Lithuanian</option>
+    </select><br><br>
+
+    {{#isEqual unit.theme "Custom"}}
+    <label for="color">Color:</label><br>
+    <input type="color" id="color" name="color" class="color-input" value="{{unit.color}}"><br><br>
+    {{/isEqual}}
+
+    <input type="submit" value="Save"><br><br>
+</form>

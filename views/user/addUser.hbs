@@ -1,0 +1,300 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+
+<div class="container-xl px-4 mt-4">
+
+    {{#if message}}
+    <div class="alert alert-danger" id="alertContainer" role="alert">
+        {{ message }}
+    </div>
+    {{/if}}
+
+    <div class="row">
+        <div class="col-md-4 d-none d-md-block">
+            <!-- Profile picture card-->
+
+            <div class="card mb-4 h-100 p-5 text-center d-block">
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="img-profile mb-3" fill="currentColor"
+                    class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                    <path
+                        d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    <path
+                        d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z" />
+                </svg>
+                <h5 class="text-center">Rellene este formulario con sus datos por favor</h5>
+            </div>
+        </div>
+
+        <div class="col">
+
+
+            <!-- Account details card-->
+            <div class="card mb-4 h-100 ">
+                <div class="card-header">Account Details</div>
+                <div class="card-body">
+                    <form action="/user/add-user" method="POST" enctype="multipart/form-data">
+
+
+
+
+                        {{!-- <div class="col-md-4"> --}}
+                            <!-- Profile picture card-->
+                            <div class="">
+                                {{!-- <div class="card-header">Profile Picture</div> --}}
+                                <div class="">
+                                    <!-- Profile picture image-->
+                                    <img id="imagePreview" class="img-account-profile img-fluid"
+                                        src="{{user.image}}" alt="">
+                                    <!-- Profile picture help block-->
+                                </div>
+                            </div>
+                            {{!--
+                        </div> --}}
+
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="small mb-1" for="inputImage">Profile Picture</label>
+                                <input class="form-control" id="inputImage" name="image" accept="image/*" type="file"
+                                    onchange="validateImage(this)">
+                            </div>
+                            <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="small mb-1" for="nameInput">Name</label>
+                                <input class="form-control" id="nameInput" name="name" type="text"
+                                    placeholder="Enter your name" value="{{user.name}}" required>
+                                <span id="error-name" style="color: red;"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6"> <!-- Form Group (email address)-->
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="email">Email address</label>
+                                    <input class="form-control" id="emailInput" name="email" type="email"
+                                        placeholder="Enter your email address" value="{{user.email}}"
+                                        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$">
+                                    <span id="error-email" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> <!-- Form Group (password)-->
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="password">Password</label>
+                                    <input class="form-control" id="passowrdInput" name="password" type="password"
+                                        placeholder="Enter your password" value="{{user.password}}"
+                                        pattern="[A-Za-z0-9!?-]{8,12}">
+                                    <div class="error-password">
+                                        <span id="error-password" style="color: red;"></span>
+                                    </div>
+                                    <input type="checkbox" id="showPasswordCheckbox" class="show-password-checkbox">
+                                    <label for="showPasswordCheckbox" class="show-password-label small mb-1">Show
+                                        password</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6"> <!-- Form Group (role)-->
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputRole">Role</label>
+                                    <select class="form-control" id="inputRole" name="role">
+                                        <option value="ADMIN_ROLE">
+                                            Admin
+                                        </option>
+                                        <option value="USER_ROLE" selected>User
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> <!-- Form Group (status)-->
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputRole">Active</label>
+                                    <select class="form-control" id="inputStatus" name="status">
+                                        <option value="true" {{#isEqual user.status true}}selected{{/isEqual}}>
+                                            True
+                                        </option>
+
+                                        <option value="false" {{#isEqual user.status false}}selected{{/isEqual}}>False
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save changes button-->
+                        <button class="btn btn-primary" type="submit" id="saveUserButton">Create user</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/checkSignUpFormFields.js"></script>
+
+<script>
+
+    const alertDiv = document.getElementById("alertContainer");
+
+    function hideAlert() {
+        alertDiv.style.display = "none";
+    }
+    setTimeout(hideAlert, 3000);
+
+    function showNotification(message, type) {
+        Swal.fire({
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2000
+        }).then(() => {
+            if (type !== 'warning') {
+                window.location.reload();
+            }
+        });
+    }
+
+    function validateImage(inputImage) {
+
+        const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+        const maxFileSize = 10 * 1024 * 1024; // 5 MB
+
+        const selectedFile = inputImage.files[0];
+
+        if (!selectedFile) {
+            showNotification('Please select an image', 'warning');
+            inputImage.value = ""; // Clear the input
+            return;
+        }
+
+        const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+        if (!allowedExtensions.includes(fileExtension)) {
+            showNotification("Invalid file type. Allowed formats: " + allowedExtensions.join(", "), 'warning');
+            inputImage.value = ""; // Clear the input
+            return;
+        }
+
+        if (selectedFile.size > maxFileSize) {
+            showNotification('File size exceeds the limit of 10 MB', 'warning');
+            inputImage.value = ""; // Clear the input
+            return;
+        }
+
+        //Si no sale ningun error, ver la preview
+        previewImage(inputImage);
+    }
+
+    function previewImage(input) {
+        const imagePreview = document.getElementById("imagePreview");
+        const selectedFile = input.files[0];
+
+        if (selectedFile) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(selectedFile);
+        } else {
+            imagePreview.src = ""; // Limpia la vista previa si no se selecciona un archivo
+        }
+    }
+
+
+</script>
+
+<style>
+    body {
+        margin-top: 20px;
+        background-color: #f2f6fc;
+        color: #69707a;
+    }
+
+    .img-account-profile {
+        height: 10rem;
+    }
+
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    }
+
+    .card .card-header {
+        font-weight: 500;
+    }
+
+    .card-header:first-child {
+        border-radius: 0.35rem 0.35rem 0 0;
+    }
+
+    .card-header {
+        padding: 1rem 1.35rem;
+        margin-bottom: 0;
+        background-color: rgba(33, 40, 50, 0.03);
+        border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+    }
+
+    .form-control,
+    .dataTable-input {
+        display: block;
+        width: 100%;
+        padding: 0.875rem 1.125rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1;
+        color: #69707a;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #c5ccd6;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 0.35rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .nav-borders .nav-link.active {
+        color: #0061f2;
+        border-bottom-color: #0061f2;
+    }
+
+    .nav-borders .nav-link {
+        color: #69707a;
+        border-bottom-width: 0.125rem;
+        border-bottom-style: solid;
+        border-bottom-color: transparent;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .btn {
+        background-color: #D41857;
+        border-color: #D41857;
+    }
+
+    .btn:hover {
+        background-color: #D41857;
+        border-color: #D41857;
+        filter: brightness(90%);
+    }
+
+    .btn:disabled {
+        background-color: #000000;
+        border-color: #000000;
+        filter: brightness(90%);
+    }
+
+    .img-profile {
+        width: 200px;
+        max-width: 100%;
+        opacity: .2;
+    }
+</style>

@@ -10,17 +10,21 @@
     {{/if}}
   </div>
 
-  <h2>Log in</h2>
+  <div id="logo-container">
+    <img id="login-logo"  src="/assets/img/indie-login-logo.png"
+  </div>
+  
   <form class="sign-in-form" action="/user/sign/in" method="POST">
     <div class="form-group">
-      <label for="email">Email:</label>
+      {{!-- <label for="email">Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> --}}
+
       <input type="text" id="email" name="email" placeholder="Email"
-        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required><br>
-      <span id="error-email" style="color: red;"></span>
+        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
+      <span id="error-email" style="color: red;" class="d-block"></span>
     </div>
     <div class="form-group">
-      <br>
-      <label for="password">Password:</label>
+
+      {{!-- <label for="password">Password:&nbsp;</label> --}}
       <input type="password" id="password" name="password" placeholder="Password" required>
     </div>
     <button type="submit" id="signInButton">Sign In</button>
@@ -28,7 +32,7 @@
   <div class="text">
     <p>If you don't have a account. <a href="/user/sign/up">Sign Up</a></p>
   </div>
-  <br>
+
 
   <div id="googleSignInButton">
     <div id="g_id_onload" data-client_id="420441003888-mvopejroboqkvj6n95mp6s89ljshbagl.apps.googleusercontent.com"
@@ -92,5 +96,17 @@
       })
       .catch(console.warn);
   }
+
+  //Hide header and footer
+  const header = document.getElementsByTagName("header")[0].remove();
+  document.addEventListener("DOMContentLoaded", function () {
+    var footer = document.getElementById("footer");
+    if (footer) {
+      footer.remove();
+    }
+  });
+
+  //header.style.display = "none";
+  //footer.style.display = "none"
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>

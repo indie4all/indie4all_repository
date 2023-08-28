@@ -1,16 +1,21 @@
-section {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
 .sign-in-section {
-    max-width: 300px;
-    margin: 100px auto;
     background-color: #f5f5f5;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    max-height: 600px;
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: 65px;
+}
+
+@media (max-width: 767px) {
+    .sign-in-section {
+        max-width: 90%;
+        margin-top: 100px;
+        padding: 10px;
+    }
+
 }
 
 h2 {
@@ -32,28 +37,25 @@ input[type="password"] {
     border-radius: 30px;
 }
 
-button {
+#signInButton {
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #D41857;
     color: #fff;
     border: none;
     border-radius: 3px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #45a049;
+#signInButton:hover {
+    filter: brightness(95%);
 }
 
-button:active {
-    background-color: #3c9039;
-}
-
-button:disabled {
+#signInButton:disabled {
     background-color: #ccc;
 }
 
-#message, .error-message {
+#message,
+.error-message {
     background-color: #c55050;
     color: #000000;
     padding: 10px;
@@ -68,4 +70,24 @@ button:disabled {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+body {
+    background-image: url("/assets/img/login-background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+#logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+    /* Agregamos un margen inferior para separar la imagen del campo de entrada */
+}
+
+#login-logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 80%;
 }

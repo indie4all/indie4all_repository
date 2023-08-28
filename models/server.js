@@ -4,7 +4,8 @@ const path = require('path');
 const { dbConnection } = require('../database/config');
 const bodyParser = require('body-parser');
 var cors = require('cors');
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
+var morgan = require('morgan');
 require('console-stamp')(console, {
    format: ':date(yyyy/mm/dd HH:MM:ss.l) :label'
 });
@@ -29,6 +30,7 @@ class Server {
       this.middlewares();
 
       this.routes();
+
    }
 
    async dbConnect() {
@@ -61,7 +63,8 @@ class Server {
       this.app.use(cors());
 
       //Lectura y parseo de body
-      this.app.use(express.json());
+      //this.app.use(express.json());
+      this.app.use(express.json({ limit: '100mb' }));
 
       //Usamos hbs para modular el proyecto
       this.app.engine('hbs', hbs({
@@ -81,7 +84,14 @@ class Server {
       });
 
       //Para que nos llegue bien el body de los forms
-      this.app.use(bodyParser.urlencoded({ limit: '50000000000mb', extended: true, parameterLimit: 100000000000 }));
+      //this.app.use(bodyParser.urlencoded({ limit: '500mb', extended: true, parameterLimit: 1000 }));
+
+      //this.app.use(bodyParser({limit: '50mb'}))
+
+      this.app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+      //this.app.use(bodyParser.json({ limit: '500mb' }));
+      //this.app.use(bodyParser.urlencoded({ limit: '500mb', extended: true }));
 
       //Para poder setear y recoger cookies
       this.app.use(cookieParser())

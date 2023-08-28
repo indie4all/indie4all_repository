@@ -1,34 +1,117 @@
 <section class="sign-up-section">
 
-    <link rel="stylesheet" href="/css/up.css">
+  <link rel="stylesheet" href="/css/up.css">
 
+  <div id="errorMessagesDiv">
     {{#if message}}
     <div id="message">
-        <p id="message">{{ message }}</p>
+      <p id="message">{{ message }}</p>
     </div>
     {{/if}}
+  </div>
 
-    <h2>Registro de Usuario</h2>
-    <form class="sign-up-form" action="/user/sign/up" method="POST">
-
-        <label for="name">Name:</label>
-        <input type="text" id="nameInput" name="name" placeholder="Name"
-            pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"
-            required><br>
+  <div>
+    <p class="font-weight-bold">Create an account</p>
+  </div>
 
 
-        <label for="email">Email:</label>
-        <input type="text" id="emailInput" name="email" placeholder="Email"
-            pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required><br>
-        <span id="error-email" style="color: red;"></span>
+  <div id="logo-container">
+    <img id="login-logo" src="/assets/img/indie-login-logo.png">
+  </div>
 
 
-        <label for="password">Contraseña:</label>
-        <input type="password" id="passowrdInput" name="password" placeholder="Password" pattern="[A-Za-z0-9!?-]{8,12}"
-            required><br>
-        <span id="error-password" style="color: red;"></span>
+  <form class="sign-up-form" action="/user/sign/up" method="POST">
 
-        <button type="submit" id="signUpButton">Sign up</button>
-    </form>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="nameInput" name="name" placeholder="Full Name"
+        pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"
+        required>
+      <label for="nameInput">Full name</label>
+      <span id="error-name" style="color: red;" class="d-block"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="emailInput" name="email" placeholder="Email"
+        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
+      <label for="nameInput">Email</label>
+      <span id="error-email" style="color: red;" class="d-block"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" id="passowrdInput" name="password" placeholder="Password" required>
+      <label for="password">Password</label>
+      <span id="error-password" style="color: red;" class="d-block"></span>
+    </div>
+
+    {{!-- <label for="name">Name:</label>
+    <input type="text" id="nameInput" name="name" placeholder="Name"
+      pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"
+      required><br> --}}
+
+    {{!-- <div class="form-group">
+      <input type="text" id="nameInput" name="name" placeholder="Full Name"
+        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
+      <span id="error-name" style="color: red;" class="d-block"></span>
+    </div> --}}
+
+    {{!-- <div class="form-group">
+      <input type="text" id="emailInput" name="email" placeholder="Email"
+        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
+      <span id="error-email" style="color: red;" class="d-block"></span>
+    </div> --}}
+
+    {{!-- <div class="form-group">
+      <input type="password" id="passowrdInput" name="password" placeholder="Password" required>
+      <span id="error-password" style="color: red;"></span>
+    </div> --}}
+    {{!-- <label for="email">Email:</label>
+    <input type="text" id="emailInput" name="email" placeholder="Email"
+      pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required><br>
+    <span id="error-email" style="color: red;"></span> --}}
+
+
+    {{!-- <label for="password">Contraseña:</label>
+    <input type="password" id="passowrdInput" name="password" placeholder="Password" pattern="[A-Za-z0-9!?-]{8,12}"
+      required><br>
+    <span id="error-password" style="color: red;"></span> --}}
+
+    <button type="submit" id="signUpButton">Sign up</button>
+  </form>
+
+  <div class="text">
+    <p>If you have a account. <a href="/user/sign/in">Sign in</a></p>
+  </div>
 </section>
+
+<script>
+  //const emailInput = document.getElementById('emailInput');
+  const emailError = document.getElementById('error-email');
+  var button = document.getElementById('signUpButton');
+
+  emailInput.addEventListener('input', validateEmail);
+
+  function validateEmail() {
+    const email = emailInput.value;
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regex.test(email)) {
+      emailError.textContent = 'Invalid email.';
+      button.disabled = true;
+    } else {
+      emailError.textContent = '';
+      button.disabled = false;
+    }
+  }
+
+  //Hide header and footer
+  const header = document.getElementsByTagName("header")[0].remove();
+  document.addEventListener("DOMContentLoaded", function () {
+    var footer = document.getElementById("footer");
+    if (footer) {
+      footer.remove();
+    }
+  });
+
+</script>
+
 <script src="/js/checkSignUpFormFields.js"></script>

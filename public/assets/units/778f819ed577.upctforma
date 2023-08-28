@@ -1,0 +1,176 @@
+ContentDefinition 'UD' { 
+    package upctforma.UD;  
+    types {
+        TextType,
+        VideoType,
+        ImageType,
+        GameType,
+        IntType,
+        Any,
+        Tab{ name: TextType, content: ContentGroup },
+        DragAndDrop{ name: ImageType, content: ImageType, solution: ImageType },
+        DragAndDropTextual{ term: TextType, definition: TextType },
+        ContentGroup { list_of Any },
+        TabList { list_of Tab},
+        ImageList{list_of ImageType},
+        DragAndDropList{list_of DragAndDrop},
+        TextualDragAndDropList{list_of DragAndDropTextual},
+        widget ImageTextOver{ ImageType, TextType },
+        widget ImageTextRight{ ImageType, TextType },
+        widget VerticalAccordion{ TabList },
+        widget HorizontalTabs{ TabList },
+        Animation{ awidht: TextType, background: ImageType, images: ImageList, aheight: TextType },
+        widget AnimationInOut{ Animation },
+        widget RectangleDragAndDrop{ DragAndDropList },
+        widget TextualDragAndDrop{ TextualDragAndDropList },
+        AudioTerm { URL : TextType, term: TextType, definition: TextType, textTracks: TextType },
+        AudioTermList { list_of AudioTerm },
+        widget ContainerAudioTerm { AudioTermList },
+        ResponseList{ list_of TextType },
+        AnswerList{ list_of IntType },
+        Test { question: TextType, response: ResponseList, correct: Any, positiveFeedback: TextType, negativeFeedback: TextType },
+        TestList { list_of Test },
+        widget ContainerTest { TestList },
+        ChooseOptionRecord { questionText: TextType, questionImage: ImageType, response1: TextType, response2: TextType, response3: TextType, response4: TextType, correct: IntType },
+        widget ChooseOption { ChooseOptionRecord },
+        ImageSoundRecord { contentText: TextType, contentImage: ImageType, sound: TextType, textTracks: TextType },
+        ImageSoundList { list_of ImageSoundRecord },
+        widget ImageSound { ImageSoundList },
+        CouplesRecord { contentText: TextType, contentImage: ImageType },
+        CouplesList { list_of CouplesRecord },
+        widget Couples { CouplesList },
+        ListSchema { list_of ImageType },
+        widget Schema { ListSchema },
+        ModalRecord { name: TextType, content: ContentGroup },
+        widget ModalButton { ModalRecord },
+        TrueFalse { question: TextType, correct: TextType, positiveFeedback: TextType, negativeFeedback: TextType },
+        TrueFalseList { list_of TrueFalse }, 
+        widget ContainerTrueFalse { TrueFalseList },
+        TextList { list_of TextType }, 
+        ColumnRecord { heading: TextType, content: TextList}, 
+        ColumnsList { list_of ColumnRecord },
+        widget MatchColumns { ColumnsList },
+        PuzzlePiece {x: IntType,y: IntType,wdth: IntType,hght: IntType,altImg: TextType,altRec: TextType},
+        PuzzlePiecesContainer { list_of PuzzlePiece },
+        PuzzleContainer { background: ImageType, pieces: PuzzlePiecesContainer },
+        widget Puzzle { PuzzleContainer },
+        widget Animation { PuzzleContainer },
+        MissingSolutions { list_of TextType },
+        MissingSentence {sentence: TextType, combinations: MissingSolutions },
+        MissingSentencesList { list_of MissingSentence },
+        widget MissingWords { MissingSentencesList },
+        CorrectWordRecord { question: TextType, image: ImageType, answer: TextType },
+        CorrectWordRecords { list_of CorrectWordRecord },
+        widget CorrectWord {CorrectWordRecords},
+        ButtonTextRecord { image: ImageType, text: TextType},
+        ButtonTextList { list_of ButtonTextRecord },
+        widget ButtonText { ButtonTextList },
+        SentenceOrderWordList { list_of TextType },
+        SentenceOrderSolutionList { list_of TextType },
+        SentenceOrderRecord { solutions: SentenceOrderSolutionList, words: SentenceOrderWordList },
+        SentenceOrderContainer { list_of SentenceOrderRecord },
+        widget SentenceOrder { SentenceOrderContainer },
+        HangmanRecord { question: TextType, solution: TextType, attempts: IntType },
+        widget Hangman { HangmanRecord },
+        RowElement { list_of TextType },
+        RowList { list_of RowElement},
+        ColumnsList { list_of TextType },
+        TableRecord { columns: ColumnsList, rows: RowList },
+        widget Table { TableRecord },
+        widget RelatedUnitItem { TextType },
+        RelatedUnitsAssociationList { list_of RelatedUnitItem },
+        widget RelatedUnitsAssociation { RelatedUnitsAssociationList },
+        RelatedUnitsList {list_of Any },
+        widget RelatedUnits { RelatedUnitsList },
+        CalloutRecord { style: TextType, color: TextType, animation: TextType, content: ContentGroup },
+        widget Callout { CalloutRecord }
+    }
+    Unit 'Equilibrio Químico' 'Bilal Aniba El Hasnaoui' Local ES PRIVATE 'CorneliusGLopez@jourrapide.com' 'UPCT' 'Custom' '778f819ed577' 0 { 
+        Section 'Química' { 
+            title 'Equilibrio químico' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>El equilibrio químico es un concepto fundamental en la química que se refiere a un estado en el que las tasas de reacción directa e inversa son iguales y no hay cambios netos en las concentraciones de las sustancias involucradas. Esto significa que, aunque las reacciones siguen ocurriendo, las concentraciones de los reactivos y productos permanecen constantes en el tiempo.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Química' { 
+            title 'Ley del Equilibrio Químico' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>La ley del equilibrio químico se expresa mediante la constante de equilibrio (K), que es la relación entre las concentraciones de los productos y los reactivos en una reacción química en equilibrio. Para una reacción general:</p>'
+                            } 
+                } 
+            }
+            ,row { 
+                column { 
+                    width '12' 
+                    Text { html 'Equilibrio químico $$aA+bB⇌cC+dD$$ '}  
+                } 
+            }
+            ,row { 
+                column { 
+                    width '12' 
+                    Text { html 'La expresión de la constante de equilibrio (K) se ve así: $$K=
+                    [C] 
+                    c
+                     [D] 
+                    d/ [A] a
+                     [B] 
+                    b
+                     
+                    ​$$ '}  
+                } 
+            }
+            ,row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>Donde los corchetes representan las concentraciones de las sustancias y los coeficientes a,b,c y d son los coeficientes estequiométricos en la ecuación de reacción.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Química' { 
+            title 'Principio de Le Chatelier' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>El principio de Le Chatelier establece que si un sistema en equilibrio es sometido a un cambio en las condiciones (como concentración, presión o temperatura), el sistema ajustará sus concentraciones para contrarrestar ese cambio y tratar de restaurar el equilibrio.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Química' { 
+            title 'Factores que Afectan el Equilibrio' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong>Concentración</strong>: Cambiar la concentración de reactivos o productos perturbará el equilibrio, lo que resultará en un cambio para compensar la perturbación.
+                                </p><p><strong>Presión</strong>: En reacciones gaseosas, cambiar la presión afectará el equilibrio solo si hay un cambio en el número total de moles de gas en los reactivos y productos.
+                                </p><p><strong>Temperatura: </strong>Cambiar la temperatura de una reacción puede cambiar el valor de la constante de equilibrio (K). Las reacciones endotérmicas se desplazarán hacia los productos con un aumento de temperatura, mientras que las exotérmicas se desplazarán hacia los reactivos.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Química' { 
+            title 'Equilibrio Ácido-Base' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>En el contexto de equilibrio ácido-base, la constante de equilibrio se conoce como constante de ionización (Kw) y se refiere a la auto-ionización del agua en iones hidronio (H3O+) e iones hidróxido (OH-). En condiciones estándar, Kw = [H3O+][OH-] = 1.0 x 10^-14.
+                                </p><p>El equilibrio químico es esencial para entender cómo las reacciones químicas alcanzan un estado de equilibrio y cómo las condiciones pueden afectar ese equilibrio. Es una parte fundamental del estudio de la química y es aplicable en una variedad de situaciones y reacciones químicas.</p>'
+                            } 
+                } 
+            }
+        }
+    } 
+}    

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const { googleVerify } = require('../helpers/googleVerify');
 const axios = require('axios');
+const path = require('path');
 
 const getSignInPage = async (req = request, res = response) => {
     console.info('Rendering sign in page')
@@ -62,7 +63,8 @@ const signInUser = async (req = request, res = response) => {
     //Save token in cookies
     res.cookie('token', token);
 
-    return res.render('home/index', { layout: 'layout' })
+    //return res.render('home/index', { layout: 'layout' })
+    return res.redirect('/');
 }
 
 const signUpNewUser = async (req = request, res = response) => {
@@ -101,8 +103,12 @@ const signUpNewUser = async (req = request, res = response) => {
 const getProfile = async (req = request, res = response) => {
     console.info('Rendering profile page');
 
+    console.log(req.uid);
+
     //Retrieve the user role
     const loggedInUser = await User.findOne({ '_id': req.uid }).lean();
+
+    console.log(loggedInUser);
 
     //Check if the user is admin and have access to 'Users' tab
     let admin = false;
@@ -113,7 +119,7 @@ const getProfile = async (req = request, res = response) => {
     //Retrieve all the users
     //const allUsers = await User.find({}).lean();
 
-    res.render('profile/profile', {
+    res.render('user/profile', {
         layout: 'layout',
         //allUsers: allUsers,
         admin: admin,
@@ -128,7 +134,7 @@ const getEditUserForm = async (req = request, res = response) => {
     const uid = req.params.id;
     const user = await User.findOne({ '_id': uid }).lean();
 
-    res.render('editUser/editUser', {
+    res.render('user/editUser', {
         user
     });
 }
@@ -140,6 +146,19 @@ const editUser = async (req = request, res = response) => {
     const uid = req.params.id;
     const originalUser = await User.findOne({ '_id': uid }).lean();
 
+    const imagePath = req.file ? req.file.path : 'public\\assets\\usersImgs\\default-user-image.jpg';
+
+    const basePath = 'public';
+    
+    let relativeImagePath;
+    if (!req.file) {
+
+        relativeImagePath = originalUser.image;
+
+    } else {
+        relativeImagePath = '/' + path.relative(basePath, imagePath).replace(/\\/g, '/');
+    }
+
     //Retrieve changed user data
     const updatedUser = {
         uid: uid,
@@ -147,7 +166,8 @@ const editUser = async (req = request, res = response) => {
         email: req.body.email,
         role: req.body.role,
         status: req.body.status,
-        password: req.body.password
+        password: req.body.password,
+        image: relativeImagePath
     };
 
     //Check if password has changed
@@ -159,11 +179,12 @@ const editUser = async (req = request, res = response) => {
 
     //Save in the database
     await User.findByIdAndUpdate(uid, updatedUser).then(() => {
-        res.redirect('/user/profile');
+        res.redirect('/user/all/page');
         console.info('User edited succesfully');
     }).catch(error => {
         console.error(error);
     });
+
 }
 
 const getUser = async (req = request, res = response) => {
@@ -171,6 +192,21 @@ const getUser = async (req = request, res = response) => {
 
     res.json({
         uid: uid
+    })
+}
+
+const getCurrentUser = async (req = request, res = response) => {
+
+    console.info(`Retrieving current user...`);
+    //Retrieve the user role
+
+    console.log(req.uid);
+    const loggedInUser = await User.findOne({ '_id': req.uid }).lean();
+
+    console.log(loggedInUser);
+
+    res.json({
+        currentUser: loggedInUser
     })
 }
 
@@ -232,7 +268,7 @@ const getAllUsers = async (req = request, res = response) => {
 
     //Retreieve page number from params
     const page = parseInt(req.query.page) || 1;
-    const limit = 10;
+    const limit = 12;
 
     const { docs, totalDocs, totalPages } = await User.paginate({}, { page, limit });
 
@@ -248,29 +284,44 @@ const deleteUser = async (req = request, res = response) => {
     console.info('Deleting user...');
 
     const uid = req.params.id;
-    const user = await User.findOneAndDelete(uid);
+    console.log('Me llega el uid siguiente: ' + uid);
+
+    const user = await User.findByIdAndDelete(uid);
 
     res.json({
         user,
     });
 }
+const getAllUsersPage = async (req = request, res = response) => {
+    console.info('Rendering all users page...');
 
+    res.render('user/allUsers', { layout: 'layout' })
+}
 const getAddUserForm = async (req = request, res = response) => {
     console.info('Retrieving form to add new user...');
 
-    res.render('addUser/addUser', { layout: 'layout' })
+    res.render('user/addUser', { layout: 'layout' })
 }
+
+
 
 
 const addNewUser = async (req = request, res = response) => {
     console.info('Adding new user...');
+
+    const imagePath = req.file ? req.file.path : 'public\\assets\\usersImgs\\default-user-image.jpg';
+
+    const basePath = 'public';
+    const relativeImagePath = '/' + path.relative(basePath, imagePath).replace(/\\/g, '/');
+    console.log(relativeImagePath);
 
     const newUser = {
         name: req.body.name,
         email: req.body.email,
         role: req.body.role,
         status: req.body.status,
-        password: req.body.password
+        password: req.body.password,
+        image: relativeImagePath
     };
 
     const emailExists = await User.findOne({ 'email': newUser.email });
@@ -278,13 +329,13 @@ const addNewUser = async (req = request, res = response) => {
 
     if (emailExists) {
         if (emailExists.status) {
-            res.render('addUser/addUser', {
+            res.render('user/addUser', {
                 layout: 'layout',
                 message: 'User already exists',
                 error: true
             });
         } else {
-            res.render('addUser/addUser', {
+            res.render('user/addUser', {
                 layout: 'layout',
                 message: 'User already exists but it is blocked',
                 error: true
@@ -301,7 +352,7 @@ const addNewUser = async (req = request, res = response) => {
 
     //Save in the database
     await user.save().then(() => {
-        res.render('addUser/addUser', {
+        res.render('user/allUsers', {
             layout: 'layout',
             message: 'User added correctly',
             error: false
@@ -310,6 +361,23 @@ const addNewUser = async (req = request, res = response) => {
     }).catch(error => {
         console.error(error);
     });
+}
+
+const checkIfLogged = async (req = request, res = response) => {
+    console.info('Checking if there is any user logged in...');
+
+    const { token } = req.cookies;
+
+    //Check if token exists
+    if (token) {
+        res.json({
+            isLoggedIn: true
+        });
+    } else {
+        res.json({
+            isLoggedIn: false
+        });
+    }
 }
 module.exports = {
     getSignInPage,
@@ -324,5 +392,8 @@ module.exports = {
     getAllUsers,
     deleteUser,
     getAddUserForm,
-    addNewUser
+    addNewUser,
+    getCurrentUser,
+    getAllUsersPage,
+    checkIfLogged
 }

@@ -19,7 +19,7 @@ const getUnits = async (req = request, res = response) => {
 
     //Retreieve page number from params
     const page = parseInt(req.query.page) || 1;
-    const limit = 10;
+    const limit = parseInt(req.query.limit) || 12;
 
     //Check if the user is admin and have access to 'Users' tab
     let allUnits = null;
@@ -38,21 +38,79 @@ const getUnits = async (req = request, res = response) => {
 
 const addUnit = async (req = request, res = response) => {
     //TO DO
-    console.info('Hola, estas en el /units/addUnit y la ruta funciona perfectamente')
+    console.info('Adding unit...');
 
-    const body = req.body;
+    const resourceId = req.body.resourceId;
+
+    const unit = await Unit.findOne({ 'resourceId': resourceId }).lean();
+
+    if(unit) {
+        console.log('Unidad');
+    }else {
+        console.log();
+
+    }
+
+    console.log(resourceId);
 
     res.json({
-        msg: 'Ruta /units/addUnit',
+        msg: 'Ruta /units/add',
         body: body
     })
 }
+
+
+const deleteUnit = async (req = request, res = response) => {
+
+    console.info('Deleting unit...');
+
+    const resourceId = req.query.resourceId;
+    const unit = await Unit.findOneAndDelete({ 'resourceId': resourceId });
+
+    res.json({
+        unit: unit
+    })
+}
+
+const getEditUnitForm = async (req = request, res = response) => {
+
+    console.log("Rendering edit unit form...");
+
+    const resourceId = req.params.resourceId;
+    const unit = await Unit.findOne({ 'resourceId': resourceId }).lean();
+
+    res.render('unit/editUnit', {
+        unit
+    });
+}
+
+const getAllUnitsPage = async (req = request, res = response) => {
+
+    console.log("Rendering all units page...");
+
+    res.render('unit/allUnits', { layout: 'layout' });
+}
+
+const saveEditedUnit = async (req = request, res = response) => {
+
+    //TO DO
+    console.log("Saving edited unit...");
+
+    const body = req.body;
+    console.log(body);
+
+    res.json({
+        body
+    })
+}
+
 
 const generateContent = async (req = request, res = response) => {
 
     console.info('Generating content...');
 
-    const resourceId = req.params.resourceId;
+
+    const resourceId = req.query.resourceId;
     console.log(resourceId)
 
     //Retrieve unit to use it as example
@@ -95,10 +153,6 @@ const copyAssetsToUnitFolder = async (resourceId) => {
     const rootFolderPath = process.cwd();
     const assetsFolderPath = path.join(rootFolderPath, 'assets');
     const unitSubFolderPath = path.join(rootFolderPath, 'public', resourceId, 'assets');
-
-    console.log(`ASSETS FOLDER PATH ${assetsFolderPath}`);
-    console.log(`Unit SUB-FOLDER PATH ${unitSubFolderPath}`);
-
 
     fs.copy(assetsFolderPath, unitSubFolderPath, (err) => {
         if (err) {
@@ -203,8 +257,52 @@ const createStyleFile = async function (folder, color, cover) {
         }
     });
 }
+
+const getRandomUnits = async (req = request, res = response) => {
+
+    console.log("Getting random units...");
+
+    const amount = parseInt(req.query.amount);
+
+    let response = {};
+
+    try {
+        const totalUnits = await Unit.countDocuments();
+
+        if (totalUnits <= amount) {
+            response.flag = 0;
+            response.units = [];
+        } else {
+            const selectedIndices = new Set();
+
+            while (selectedIndices.size < amount) {
+                selectedIndices.add(Math.floor(Math.random() * totalUnits));
+            }
+
+            //const allowDiskUse = { allowDiskUse: true }
+            const selectedUnits = await Unit.aggregate([{ $sample: { size: amount } }]).allowDiskUse(true);
+
+
+            response.flag = 1;
+            response.units = selectedUnits;
+
+        }
+
+        res.json({ response: response });
+
+    } catch (error) {
+        console.error('Error getting random documents:', error);
+    }
+
+}
+
 module.exports = {
     getUnits,
     addUnit,
-    generateContent
+    generateContent,
+    deleteUnit,
+    getEditUnitForm,
+    saveEditedUnit,
+    getAllUnitsPage,
+    getRandomUnits
 }

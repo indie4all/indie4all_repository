@@ -1,0 +1,119 @@
+ContentDefinition 'UD' { 
+    package upctforma.UD;  
+    types {
+        TextType,
+        VideoType,
+        ImageType,
+        GameType,
+        IntType,
+        Any,
+        Tab{ name: TextType, content: ContentGroup },
+        DragAndDrop{ name: ImageType, content: ImageType, solution: ImageType },
+        DragAndDropTextual{ term: TextType, definition: TextType },
+        ContentGroup { list_of Any },
+        TabList { list_of Tab},
+        ImageList{list_of ImageType},
+        DragAndDropList{list_of DragAndDrop},
+        TextualDragAndDropList{list_of DragAndDropTextual},
+        widget ImageTextOver{ ImageType, TextType },
+        widget ImageTextRight{ ImageType, TextType },
+        widget VerticalAccordion{ TabList },
+        widget HorizontalTabs{ TabList },
+        Animation{ awidht: TextType, background: ImageType, images: ImageList, aheight: TextType },
+        widget AnimationInOut{ Animation },
+        widget RectangleDragAndDrop{ DragAndDropList },
+        widget TextualDragAndDrop{ TextualDragAndDropList },
+        AudioTerm { URL : TextType, term: TextType, definition: TextType, textTracks: TextType },
+        AudioTermList { list_of AudioTerm },
+        widget ContainerAudioTerm { AudioTermList },
+        ResponseList{ list_of TextType },
+        AnswerList{ list_of IntType },
+        Test { question: TextType, response: ResponseList, correct: Any, positiveFeedback: TextType, negativeFeedback: TextType },
+        TestList { list_of Test },
+        widget ContainerTest { TestList },
+        ChooseOptionRecord { questionText: TextType, questionImage: ImageType, response1: TextType, response2: TextType, response3: TextType, response4: TextType, correct: IntType },
+        widget ChooseOption { ChooseOptionRecord },
+        ImageSoundRecord { contentText: TextType, contentImage: ImageType, sound: TextType, textTracks: TextType },
+        ImageSoundList { list_of ImageSoundRecord },
+        widget ImageSound { ImageSoundList },
+        CouplesRecord { contentText: TextType, contentImage: ImageType },
+        CouplesList { list_of CouplesRecord },
+        widget Couples { CouplesList },
+        ListSchema { list_of ImageType },
+        widget Schema { ListSchema },
+        ModalRecord { name: TextType, content: ContentGroup },
+        widget ModalButton { ModalRecord },
+        TrueFalse { question: TextType, correct: TextType, positiveFeedback: TextType, negativeFeedback: TextType },
+        TrueFalseList { list_of TrueFalse }, 
+        widget ContainerTrueFalse { TrueFalseList },
+        TextList { list_of TextType }, 
+        ColumnRecord { heading: TextType, content: TextList}, 
+        ColumnsList { list_of ColumnRecord },
+        widget MatchColumns { ColumnsList },
+        PuzzlePiece {x: IntType,y: IntType,wdth: IntType,hght: IntType,altImg: TextType,altRec: TextType},
+        PuzzlePiecesContainer { list_of PuzzlePiece },
+        PuzzleContainer { background: ImageType, pieces: PuzzlePiecesContainer },
+        widget Puzzle { PuzzleContainer },
+        widget Animation { PuzzleContainer },
+        MissingSolutions { list_of TextType },
+        MissingSentence {sentence: TextType, combinations: MissingSolutions },
+        MissingSentencesList { list_of MissingSentence },
+        widget MissingWords { MissingSentencesList },
+        CorrectWordRecord { question: TextType, image: ImageType, answer: TextType },
+        CorrectWordRecords { list_of CorrectWordRecord },
+        widget CorrectWord {CorrectWordRecords},
+        ButtonTextRecord { image: ImageType, text: TextType},
+        ButtonTextList { list_of ButtonTextRecord },
+        widget ButtonText { ButtonTextList },
+        SentenceOrderWordList { list_of TextType },
+        SentenceOrderSolutionList { list_of TextType },
+        SentenceOrderRecord { solutions: SentenceOrderSolutionList, words: SentenceOrderWordList },
+        SentenceOrderContainer { list_of SentenceOrderRecord },
+        widget SentenceOrder { SentenceOrderContainer },
+        HangmanRecord { question: TextType, solution: TextType, attempts: IntType },
+        widget Hangman { HangmanRecord },
+        RowElement { list_of TextType },
+        RowList { list_of RowElement},
+        ColumnsList { list_of TextType },
+        TableRecord { columns: ColumnsList, rows: RowList },
+        widget Table { TableRecord },
+        widget RelatedUnitItem { TextType },
+        RelatedUnitsAssociationList { list_of RelatedUnitItem },
+        widget RelatedUnitsAssociation { RelatedUnitsAssociationList },
+        RelatedUnitsList {list_of Any },
+        widget RelatedUnits { RelatedUnitsList },
+        CalloutRecord { style: TextType, color: TextType, animation: TextType, content: ContentGroup },
+        widget Callout { CalloutRecord }
+    }
+    Unit 'Bioenergética y Fosforilación Oxidativa' 'Bilal Aniba El Hasnaoui' Local ES PRIVATE 'CorneliusGLopez@jourrapide.com' 'UPCT' 'Custom' '499a159c55fc' 0 { 
+        Section 'Biología' { 
+            title 'Bioenergética' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>La bioenergética se refiere al estudio de cómo los organismos vivos obtienen y utilizan la energía. En las células, la energía se almacena en forma de moléculas de adenosín trifosfato (ATP), que actúan como una especie de "moneda energética". El proceso mediante el cual se produce la mayor parte del ATP en las células se llama fosforilación oxidativa.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Biología' { 
+            title 'Fosforilación Oxidativa' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>La <strong>fosforilación oxidativa</strong> es una serie de reacciones bioquímicas que ocurren en las mitocondrias, las estructuras dentro de las células que se conocen como las "centrales eléctricas" de la célula. Aquí, se lleva a cabo la conversión eficiente de nutrientes, como glucosa y ácidos grasos, en ATP utilizando el oxígeno como aceptador final de electrones.
+                                </p><p>A continuación, te explico los pasos principales de la fosforilación oxidativa:
+                                </p><p><strong>Glicólisis y Ciclo de Krebs: </strong>Los carbohidratos y los ácidos grasos se descomponen en unidades más pequeñas a través de procesos como la glicólisis y el ciclo de Krebs. Estos procesos liberan electrones y protones (iones de hidrógeno) que serán utilizados más adelante en la cadena de transporte de electrones.
+                                </p><p><strong>Cadena de Transporte de Electrones</strong>: Los electrones y protones liberados en la glicólisis y el ciclo de Krebs se transfieren a través de una serie de complejos proteicos en la membrana interna de la mitocondria. A medida que los electrones se mueven de un complejo a otro, liberan energía que se utiliza para bombear protones a través de la membrana interna hacia un espacio llamado espacio intermembrana.
+                                </p><p><strong>Gradiente Protones y ATP Sintasa: </strong>La acumulación de protones en el espacio intermembrana crea un gradiente electroquímico. La enzima ATP sintasa utiliza este gradiente para convertir el ADP (difosfato de adenosina) en ATP (trifosfato de adenosina). Este proceso se llama quimiosmótica y es como una turbina que utiliza el flujo de protones para generar ATP.
+                                </p><p><strong>Producción de Agua:</strong> Los electrones finalmente llegan al oxígeno, el cual acepta los electrones y protones para formar agua. Este paso es crucial para evitar la acumulación de electrones y mantener el flujo en la cadena de transporte de electrones.
+                                </p><p>En resumen, la fosforilación oxidativa es un proceso esencial para la generación de ATP, la moneda energética de la célula. A través de la cadena de transporte de electrones y el gradiente de protones, se genera el ATP necesario para alimentar una amplia gama de funciones celulares. Este proceso es fundamental para la vida, ya que proporciona la energía necesaria para mantener las funciones celulares y los procesos metabólicos.
+                                </p><p></p>'
+                            } 
+                } 
+            }
+        }
+    } 
+}    

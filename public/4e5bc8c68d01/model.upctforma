@@ -1,0 +1,152 @@
+ContentDefinition 'UD' { 
+    package upctforma.UD;  
+    types {
+        TextType,
+        VideoType,
+        ImageType,
+        GameType,
+        IntType,
+        Any,
+        Tab{ name: TextType, content: ContentGroup },
+        DragAndDrop{ name: ImageType, content: ImageType, solution: ImageType },
+        DragAndDropTextual{ term: TextType, definition: TextType },
+        ContentGroup { list_of Any },
+        TabList { list_of Tab},
+        ImageList{list_of ImageType},
+        DragAndDropList{list_of DragAndDrop},
+        TextualDragAndDropList{list_of DragAndDropTextual},
+        widget ImageTextOver{ ImageType, TextType },
+        widget ImageTextRight{ ImageType, TextType },
+        widget VerticalAccordion{ TabList },
+        widget HorizontalTabs{ TabList },
+        Animation{ awidht: TextType, background: ImageType, images: ImageList, aheight: TextType },
+        widget AnimationInOut{ Animation },
+        widget RectangleDragAndDrop{ DragAndDropList },
+        widget TextualDragAndDrop{ TextualDragAndDropList },
+        AudioTerm { URL : TextType, term: TextType, definition: TextType, textTracks: TextType },
+        AudioTermList { list_of AudioTerm },
+        widget ContainerAudioTerm { AudioTermList },
+        ResponseList{ list_of TextType },
+        AnswerList{ list_of IntType },
+        Test { question: TextType, response: ResponseList, correct: Any, positiveFeedback: TextType, negativeFeedback: TextType },
+        TestList { list_of Test },
+        widget ContainerTest { TestList },
+        ChooseOptionRecord { questionText: TextType, questionImage: ImageType, response1: TextType, response2: TextType, response3: TextType, response4: TextType, correct: IntType },
+        widget ChooseOption { ChooseOptionRecord },
+        ImageSoundRecord { contentText: TextType, contentImage: ImageType, sound: TextType, textTracks: TextType },
+        ImageSoundList { list_of ImageSoundRecord },
+        widget ImageSound { ImageSoundList },
+        CouplesRecord { contentText: TextType, contentImage: ImageType },
+        CouplesList { list_of CouplesRecord },
+        widget Couples { CouplesList },
+        ListSchema { list_of ImageType },
+        widget Schema { ListSchema },
+        ModalRecord { name: TextType, content: ContentGroup },
+        widget ModalButton { ModalRecord },
+        TrueFalse { question: TextType, correct: TextType, positiveFeedback: TextType, negativeFeedback: TextType },
+        TrueFalseList { list_of TrueFalse }, 
+        widget ContainerTrueFalse { TrueFalseList },
+        TextList { list_of TextType }, 
+        ColumnRecord { heading: TextType, content: TextList}, 
+        ColumnsList { list_of ColumnRecord },
+        widget MatchColumns { ColumnsList },
+        PuzzlePiece {x: IntType,y: IntType,wdth: IntType,hght: IntType,altImg: TextType,altRec: TextType},
+        PuzzlePiecesContainer { list_of PuzzlePiece },
+        PuzzleContainer { background: ImageType, pieces: PuzzlePiecesContainer },
+        widget Puzzle { PuzzleContainer },
+        widget Animation { PuzzleContainer },
+        MissingSolutions { list_of TextType },
+        MissingSentence {sentence: TextType, combinations: MissingSolutions },
+        MissingSentencesList { list_of MissingSentence },
+        widget MissingWords { MissingSentencesList },
+        CorrectWordRecord { question: TextType, image: ImageType, answer: TextType },
+        CorrectWordRecords { list_of CorrectWordRecord },
+        widget CorrectWord {CorrectWordRecords},
+        ButtonTextRecord { image: ImageType, text: TextType},
+        ButtonTextList { list_of ButtonTextRecord },
+        widget ButtonText { ButtonTextList },
+        SentenceOrderWordList { list_of TextType },
+        SentenceOrderSolutionList { list_of TextType },
+        SentenceOrderRecord { solutions: SentenceOrderSolutionList, words: SentenceOrderWordList },
+        SentenceOrderContainer { list_of SentenceOrderRecord },
+        widget SentenceOrder { SentenceOrderContainer },
+        HangmanRecord { question: TextType, solution: TextType, attempts: IntType },
+        widget Hangman { HangmanRecord },
+        RowElement { list_of TextType },
+        RowList { list_of RowElement},
+        ColumnsList { list_of TextType },
+        TableRecord { columns: ColumnsList, rows: RowList },
+        widget Table { TableRecord },
+        widget RelatedUnitItem { TextType },
+        RelatedUnitsAssociationList { list_of RelatedUnitItem },
+        widget RelatedUnitsAssociation { RelatedUnitsAssociationList },
+        RelatedUnitsList {list_of Any },
+        widget RelatedUnits { RelatedUnitsList },
+        CalloutRecord { style: TextType, color: TextType, animation: TextType, content: ContentGroup },
+        widget Callout { CalloutRecord }
+    }
+    Unit 'El Arte Surrealista y la Exploración del Subconsciente' 'Bilal Aniba El Hasnaoui' Local ES PRIVATE 'CorneliusGLopez@jourrapide.com' 'UPCT' 'Custom' '4e5bc8c68d01' 0 { 
+        Section 'Historia del arte' { 
+            title 'Contexto histórico' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>El surrealismo fue un movimiento artístico y literario que emergió en la década de 1920, en respuesta a los cambios radicales y las tensiones sociales y políticas que siguieron a la Primera Guerra Mundial. Se caracterizó por su enfoque en lo irracional, lo onírico y lo subconsciente, en contraposición a la lógica y la razón del mundo moderno.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Historia del arte' { 
+            title 'Los principios del surrealismo' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>El surrealismo se basa en la idea de que la realidad es mucho más profunda y compleja de lo que se percibe superficialmente. Los artistas surrealistas exploraron el mundo de los sueños, los impulsos subconscientes y las asociaciones libres, buscando revelar aspectos ocultos de la mente humana y cuestionar las normas sociales.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Historia del arte' { 
+            title 'Características del Arte Surrealista' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong>Representación de lo Onírico:</strong> Las obras surrealistas a menudo presentan elementos oníricos, absurdos yuxtapuestos en formas que desafían las convenciones de la lógica y la realidad.
+                                </p><p><strong>Imágenes Inesperadas</strong>: Los artistas combinaban objetos y elementos inesperados en formas inusuales, creando una sensación de extrañeza y asombro.
+                                </p><p><strong>Técnica Detallada:</strong> A pesar de la naturaleza a menudo caótica de las composiciones, los artistas surrealistas a menudo empleaban técnicas detalladas y realistas para representar objetos y figuras.
+                                </p><p><strong>Automatismo y Espontaneidad: </strong>Los surrealistas valoraban el automatismo, el proceso de crear sin una planificación consciente, para capturar la expresión pura del subconsciente.
+                                </p><p><strong>Transformación y Metamorfosis: </strong>La transformación de objetos y figuras en formas diferentes o inesperadas era una característica común, lo que reflejaba la idea de que todo puede ser reinterpretado y transformado.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Historia del arte' { 
+            title 'Artistas clave' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p><strong>Salvador Dalí:</strong> Conocido por su estilo extravagante y sus imágenes oníricas, Dalí es uno de los surrealistas más icónicos. Obras como "La persistencia de la memoria" desafían el concepto de tiempo y realidad.</p><p><strong>René Magritte:</strong> Famoso por sus imágenes enigmáticas y su juego con la percepción, Magritte exploró la relación entre las palabras y las imágenes en sus obras.
+                                </p><p><strong>Max Ernst:</strong> Pionero en técnicas como el frottage (frotado) y el grattage (rascado), Ernst creó imágenes abstractas a partir de texturas y raspaduras.
+                                </p><p></p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Historia del arte' { 
+            title 'Legado e influencia' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>El surrealismo influyó en varias disciplinas artísticas, incluyendo la pintura, la escultura, la literatura y el cine. Su enfoque en el subconsciente y lo irracional allanó el camino para exploraciones posteriores del psicoanálisis y la psicología en el arte. Además, el surrealismo continúa inspirando a artistas contemporáneos en su búsqueda de expresión personal y exploración de mundos internos.</p><p>El surrealismo sigue siendo un tema fascinante en la historia del arte, ya que nos invita a cuestionar la naturaleza de la realidad y a sumergirnos en el misterio del subconsciente humano.
+                                </p><p></p>'
+                            } 
+                } 
+            }
+        }
+    } 
+}    

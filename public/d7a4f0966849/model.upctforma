@@ -1,0 +1,140 @@
+ContentDefinition 'UD' { 
+    package upctforma.UD;  
+    types {
+        TextType,
+        VideoType,
+        ImageType,
+        GameType,
+        IntType,
+        Any,
+        Tab{ name: TextType, content: ContentGroup },
+        DragAndDrop{ name: ImageType, content: ImageType, solution: ImageType },
+        DragAndDropTextual{ term: TextType, definition: TextType },
+        ContentGroup { list_of Any },
+        TabList { list_of Tab},
+        ImageList{list_of ImageType},
+        DragAndDropList{list_of DragAndDrop},
+        TextualDragAndDropList{list_of DragAndDropTextual},
+        widget ImageTextOver{ ImageType, TextType },
+        widget ImageTextRight{ ImageType, TextType },
+        widget VerticalAccordion{ TabList },
+        widget HorizontalTabs{ TabList },
+        Animation{ awidht: TextType, background: ImageType, images: ImageList, aheight: TextType },
+        widget AnimationInOut{ Animation },
+        widget RectangleDragAndDrop{ DragAndDropList },
+        widget TextualDragAndDrop{ TextualDragAndDropList },
+        AudioTerm { URL : TextType, term: TextType, definition: TextType, textTracks: TextType },
+        AudioTermList { list_of AudioTerm },
+        widget ContainerAudioTerm { AudioTermList },
+        ResponseList{ list_of TextType },
+        AnswerList{ list_of IntType },
+        Test { question: TextType, response: ResponseList, correct: Any, positiveFeedback: TextType, negativeFeedback: TextType },
+        TestList { list_of Test },
+        widget ContainerTest { TestList },
+        ChooseOptionRecord { questionText: TextType, questionImage: ImageType, response1: TextType, response2: TextType, response3: TextType, response4: TextType, correct: IntType },
+        widget ChooseOption { ChooseOptionRecord },
+        ImageSoundRecord { contentText: TextType, contentImage: ImageType, sound: TextType, textTracks: TextType },
+        ImageSoundList { list_of ImageSoundRecord },
+        widget ImageSound { ImageSoundList },
+        CouplesRecord { contentText: TextType, contentImage: ImageType },
+        CouplesList { list_of CouplesRecord },
+        widget Couples { CouplesList },
+        ListSchema { list_of ImageType },
+        widget Schema { ListSchema },
+        ModalRecord { name: TextType, content: ContentGroup },
+        widget ModalButton { ModalRecord },
+        TrueFalse { question: TextType, correct: TextType, positiveFeedback: TextType, negativeFeedback: TextType },
+        TrueFalseList { list_of TrueFalse }, 
+        widget ContainerTrueFalse { TrueFalseList },
+        TextList { list_of TextType }, 
+        ColumnRecord { heading: TextType, content: TextList}, 
+        ColumnsList { list_of ColumnRecord },
+        widget MatchColumns { ColumnsList },
+        PuzzlePiece {x: IntType,y: IntType,wdth: IntType,hght: IntType,altImg: TextType,altRec: TextType},
+        PuzzlePiecesContainer { list_of PuzzlePiece },
+        PuzzleContainer { background: ImageType, pieces: PuzzlePiecesContainer },
+        widget Puzzle { PuzzleContainer },
+        widget Animation { PuzzleContainer },
+        MissingSolutions { list_of TextType },
+        MissingSentence {sentence: TextType, combinations: MissingSolutions },
+        MissingSentencesList { list_of MissingSentence },
+        widget MissingWords { MissingSentencesList },
+        CorrectWordRecord { question: TextType, image: ImageType, answer: TextType },
+        CorrectWordRecords { list_of CorrectWordRecord },
+        widget CorrectWord {CorrectWordRecords},
+        ButtonTextRecord { image: ImageType, text: TextType},
+        ButtonTextList { list_of ButtonTextRecord },
+        widget ButtonText { ButtonTextList },
+        SentenceOrderWordList { list_of TextType },
+        SentenceOrderSolutionList { list_of TextType },
+        SentenceOrderRecord { solutions: SentenceOrderSolutionList, words: SentenceOrderWordList },
+        SentenceOrderContainer { list_of SentenceOrderRecord },
+        widget SentenceOrder { SentenceOrderContainer },
+        HangmanRecord { question: TextType, solution: TextType, attempts: IntType },
+        widget Hangman { HangmanRecord },
+        RowElement { list_of TextType },
+        RowList { list_of RowElement},
+        ColumnsList { list_of TextType },
+        TableRecord { columns: ColumnsList, rows: RowList },
+        widget Table { TableRecord },
+        widget RelatedUnitItem { TextType },
+        RelatedUnitsAssociationList { list_of RelatedUnitItem },
+        widget RelatedUnitsAssociation { RelatedUnitsAssociationList },
+        RelatedUnitsList {list_of Any },
+        widget RelatedUnits { RelatedUnitsList },
+        CalloutRecord { style: TextType, color: TextType, animation: TextType, content: ContentGroup },
+        widget Callout { CalloutRecord }
+    }
+    Unit 'Catabolismo de los ácidos grasos' 'Bilal Aniba El Hasnaoui' Local ES PRIVATE 'bilalanibahasnaoui@gmail.com' 'UPCT' 'Custom' 'd7a4f0966849' 0 { 
+        Section 'Biología' { 
+            title 'Introducción' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>El catabolismo de los ácidos grasos es el proceso mediante el cual los organismos descomponen los ácidos grasos, que son moléculas de lípidos, para obtener energía. Este proceso ocurre principalmente en las mitocondrias de las células y consta de tres etapas principales: la lipólisis, el transporte de los ácidos grasos y la oxidación de los ácidos grasos.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Biología' { 
+            title 'Lipólisis' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>&nbsp;La primera etapa es la lipólisis, que ocurre en el tejido adiposo (graso). En esta etapa, las enzimas llamadas lipasas descomponen los triglicéridos (una forma de almacenamiento de ácidos grasos) en ácidos grasos y glicerol. Estos ácidos grasos liberados en el torrente sanguíneo pueden ser transportados a diferentes tejidos para su posterior utilización.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Biología' { 
+            title 'Transporte de ácidos grasos' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>&nbsp;Una vez que los ácidos grasos son liberados en el torrente sanguíneo, se unen a la albúmina, una proteína transportadora en la sangre. La albúmina lleva los ácidos grasos desde el tejido adiposo hasta las células que los necesitan para obtener energía.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Biología' { 
+            title 'Oxidación de ácidos grasos' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>&nbsp;Una vez que los ácidos grasos llegan a las células, se someten a la oxidación en las mitocondrias para producir energía en forma de ATP (adenosín trifosfato). Este proceso se conoce como la beta-oxidación. Aquí están los pasos principales de la beta-oxidación:
+                                </p><p><strong>a. Activación:</strong> Los ácidos grasos se activan en el citoplasma mediante la adición de una molécula de coenzima A (CoA), formando ácidos grasos acil-CoA.
+                                </p><p><strong>b. Traslado a la mitocondria:</strong> Los ácidos grasos acil-CoA no pueden cruzar la membrana mitocondrial por sí solos. Por lo tanto, necesitan ser transportados a través de la membrana mediante un proceso llamado translocación.
+                                </p><p><strong>c. Beta-oxidación:</strong> Dentro de la mitocondria, los ácidos grasos acil-CoA se someten a una serie de reacciones enzimáticas de beta-oxidación. Cada ciclo de beta-oxidación corta dos carbonos del ácido graso, formando acetil-CoA, que luego entra en el ciclo de Krebs (también conocido como ciclo del ácido cítrico) para su oxidación adicional y producción de energía.
+                                </p><p><strong>d. Formación de acetil-CoA:</strong> Los fragmentos de dos carbonos se liberan en forma de acetil-CoA en cada ciclo de beta-oxidación. Estos acetil-CoA pueden ingresar al ciclo de Krebs para producir ATP a través de la fosforilación oxidativa.
+                                </p><p>El catabolismo de los ácidos grasos es una fuente eficiente de energía para el cuerpo, especialmente durante períodos de ayuno o ejercicio prolongado. Sin embargo, es importante recordar que el equilibrio entre la ingesta y el catabolismo de los ácidos grasos es crucial para mantener la salud y evitar problemas como la acumulación excesiva de grasa en los tejidos.
+                                </p><p></p>'
+                            } 
+                } 
+            }
+        }
+    } 
+}    

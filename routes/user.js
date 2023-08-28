@@ -11,11 +11,15 @@ const { getSignInPage,
     getAllUsers,
     deleteUser,
     getAddUserForm,
-    addNewUser } = require('../controllers/sign');
+    addNewUser,
+    getCurrentUser,
+    getAllUsersPage,
+    checkIfLogged } = require('../controllers/sign');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validateFields');
 const validateJwt = require('../middlewares/validateJwt');
 const {findUserById, isAdminRole, emailExists } = require('../helpers/dbValidators');
+const upload = require("../middlewares/configureMulter");
 
 const router = Router();
 
@@ -31,6 +35,7 @@ router.post('/sign/in', [
 ], signInUser);
 
 router.post('/sign/up', [
+    check('name', 'Name is mandatory').not().isEmpty(),
     check('email', 'Email is mandatory').isEmail(),
     check('password', 'Password is mandatory').not().isEmpty(),
     validateFields
@@ -59,9 +64,9 @@ router.get('/edit/:id', [
 router.post('/edit/:id', [
     validateJwt,
     check('id', 'Not valid ID').isMongoId(),
-    validateFields
+    validateFields,
+    upload.single('image')
 ], editUser)
-
 
 //Get all users end-point
 router.get('/get/all', [
@@ -82,13 +87,26 @@ router.delete('/delete/:id', [
 //Get add user form
 router.get('/add/form', [
     validateJwt,
-    check('id').custom( isAdminRole ),
+    check('id').custom( isAdminRole )
 ], getAddUserForm);
 
 //Get add user form
 router.post('/add-user', [
     validateJwt,
+    upload.single('image')
 ], addNewUser);
+
+//Get logged in user
+router.get('/current', [
+    validateJwt,
+], getCurrentUser)
+
+//Get all users page
+router.get('/all/page', [
+    validateJwt,
+], getAllUsersPage)
+
+router.get('/iflogged', checkIfLogged)
 
 
 module.exports = router;

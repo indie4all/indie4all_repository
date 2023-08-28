@@ -4,8 +4,6 @@ const validateJwt = require('../middlewares/validateJwt');
 
 const router = Router();
 
-router.get('/',[
-    validateJwt
-], home);
+router.get('/', home);
 
 module.exports = router;

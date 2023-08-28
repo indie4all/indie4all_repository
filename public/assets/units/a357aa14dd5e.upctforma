@@ -1,0 +1,135 @@
+ContentDefinition 'UD' { 
+    package upctforma.UD;  
+    types {
+        TextType,
+        VideoType,
+        ImageType,
+        GameType,
+        IntType,
+        Any,
+        Tab{ name: TextType, content: ContentGroup },
+        DragAndDrop{ name: ImageType, content: ImageType, solution: ImageType },
+        DragAndDropTextual{ term: TextType, definition: TextType },
+        ContentGroup { list_of Any },
+        TabList { list_of Tab},
+        ImageList{list_of ImageType},
+        DragAndDropList{list_of DragAndDrop},
+        TextualDragAndDropList{list_of DragAndDropTextual},
+        widget ImageTextOver{ ImageType, TextType },
+        widget ImageTextRight{ ImageType, TextType },
+        widget VerticalAccordion{ TabList },
+        widget HorizontalTabs{ TabList },
+        Animation{ awidht: TextType, background: ImageType, images: ImageList, aheight: TextType },
+        widget AnimationInOut{ Animation },
+        widget RectangleDragAndDrop{ DragAndDropList },
+        widget TextualDragAndDrop{ TextualDragAndDropList },
+        AudioTerm { URL : TextType, term: TextType, definition: TextType, textTracks: TextType },
+        AudioTermList { list_of AudioTerm },
+        widget ContainerAudioTerm { AudioTermList },
+        ResponseList{ list_of TextType },
+        AnswerList{ list_of IntType },
+        Test { question: TextType, response: ResponseList, correct: Any, positiveFeedback: TextType, negativeFeedback: TextType },
+        TestList { list_of Test },
+        widget ContainerTest { TestList },
+        ChooseOptionRecord { questionText: TextType, questionImage: ImageType, response1: TextType, response2: TextType, response3: TextType, response4: TextType, correct: IntType },
+        widget ChooseOption { ChooseOptionRecord },
+        ImageSoundRecord { contentText: TextType, contentImage: ImageType, sound: TextType, textTracks: TextType },
+        ImageSoundList { list_of ImageSoundRecord },
+        widget ImageSound { ImageSoundList },
+        CouplesRecord { contentText: TextType, contentImage: ImageType },
+        CouplesList { list_of CouplesRecord },
+        widget Couples { CouplesList },
+        ListSchema { list_of ImageType },
+        widget Schema { ListSchema },
+        ModalRecord { name: TextType, content: ContentGroup },
+        widget ModalButton { ModalRecord },
+        TrueFalse { question: TextType, correct: TextType, positiveFeedback: TextType, negativeFeedback: TextType },
+        TrueFalseList { list_of TrueFalse }, 
+        widget ContainerTrueFalse { TrueFalseList },
+        TextList { list_of TextType }, 
+        ColumnRecord { heading: TextType, content: TextList}, 
+        ColumnsList { list_of ColumnRecord },
+        widget MatchColumns { ColumnsList },
+        PuzzlePiece {x: IntType,y: IntType,wdth: IntType,hght: IntType,altImg: TextType,altRec: TextType},
+        PuzzlePiecesContainer { list_of PuzzlePiece },
+        PuzzleContainer { background: ImageType, pieces: PuzzlePiecesContainer },
+        widget Puzzle { PuzzleContainer },
+        widget Animation { PuzzleContainer },
+        MissingSolutions { list_of TextType },
+        MissingSentence {sentence: TextType, combinations: MissingSolutions },
+        MissingSentencesList { list_of MissingSentence },
+        widget MissingWords { MissingSentencesList },
+        CorrectWordRecord { question: TextType, image: ImageType, answer: TextType },
+        CorrectWordRecords { list_of CorrectWordRecord },
+        widget CorrectWord {CorrectWordRecords},
+        ButtonTextRecord { image: ImageType, text: TextType},
+        ButtonTextList { list_of ButtonTextRecord },
+        widget ButtonText { ButtonTextList },
+        SentenceOrderWordList { list_of TextType },
+        SentenceOrderSolutionList { list_of TextType },
+        SentenceOrderRecord { solutions: SentenceOrderSolutionList, words: SentenceOrderWordList },
+        SentenceOrderContainer { list_of SentenceOrderRecord },
+        widget SentenceOrder { SentenceOrderContainer },
+        HangmanRecord { question: TextType, solution: TextType, attempts: IntType },
+        widget Hangman { HangmanRecord },
+        RowElement { list_of TextType },
+        RowList { list_of RowElement},
+        ColumnsList { list_of TextType },
+        TableRecord { columns: ColumnsList, rows: RowList },
+        widget Table { TableRecord },
+        widget RelatedUnitItem { TextType },
+        RelatedUnitsAssociationList { list_of RelatedUnitItem },
+        widget RelatedUnitsAssociation { RelatedUnitsAssociationList },
+        RelatedUnitsList {list_of Any },
+        widget RelatedUnits { RelatedUnitsList },
+        CalloutRecord { style: TextType, color: TextType, animation: TextType, content: ContentGroup },
+        widget Callout { CalloutRecord }
+    }
+    Unit 'La Generación del 27' 'Bilal Aniba El Hasnaoui' Local ES PRIVATE 'bilalanibahasnaoui@gmail.com' 'Universidad Politécnica de Cartagena' 'Custom' 'a357aa14dd5e' 0 { 
+        Section 'Literatura' { 
+            title 'Introducción' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>La Generación del 27 fue un destacado movimiento literario y artístico que surgió en España en la década de 1920, durante la época conocida como la Edad de Plata de la literatura española. Este grupo de escritores, poetas y artistas compartía un profundo interés por la experimentación estética y una búsqueda de renovación en las formas y temáticas de la literatura, el arte y la cultura en general. Aquí tienes un resumen de los aspectos clave de la Generación del 27:</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Literatura' { 
+            title 'Desarrollo' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<h4>Contexto Histórico y Social</h4><p>La Generación del 27 emergió en un período de cambios sociales, políticos y culturales en España. La dictadura de Primo de Rivera y la posterior Segunda República Española fomentaron un ambiente de apertura intelectual y cultural, lo que permitió el florecimiento de nuevas ideas y expresiones artísticas.
+                                </p><h4>Vanguardismo y Experimentación</h4><p>&nbsp;Los miembros de la Generación del 27 estaban influidos por las corrientes vanguardistas europeas, como el surrealismo, el cubismo y el futurismo. Buscaban romper con las tradiciones literarias y artísticas establecidas, adoptando técnicas innovadoras y sorprendentes en sus obras.
+                                </p><h4>Poesía Vanguardista</h4><p>La poesía fue una forma de expresión destacada en este movimiento. Los poetas del 27 exploraron la relación entre la palabra y la imagen, la musicalidad del lenguaje y la introspección emocional. Entre los poetas más conocidos se encuentran Federico García Lorca, Rafael Alberti, Vicente Aleixandre y Luis Cernuda.
+                                </p><h4>Amplia Variedad Temática</h4><p>Los temas abordados en las obras del 27 fueron diversos, desde la naturaleza y la cotidianidad hasta lo abstracto y lo metafísico. La guerra, el amor, la identidad y la crítica social también fueron temas recurrentes en sus creaciones.
+                                </p><h4>Teatro y Literatura</h4><p>&nbsp;Además de la poesía, la Generación del 27 también influyó en el teatro y la prosa. Federico García Lorca se destacó en ambos géneros, creando obras teatrales como "Bodas de sangre" y "La casa de Bernarda Alba", que exploraban temas profundos y conflictos humanos.
+                                </p><h4>Amistades y Colaboraciones</h4><p>Los miembros de esta generación mantenían relaciones estrechas y amistosas entre sí, lo que llevó a colaboraciones artísticas y literarias. Juntos organizaron eventos culturales y publicaciones que ayudaron a difundir sus ideas y obras.
+                                </p><h4>Exilio y Guerra Civil</h4><p>El estallido de la Guerra Civil Española en 1936 marcó un punto de quiebre para la Generación del 27. Algunos de sus miembros se vieron afectados por la violencia y el conflicto, mientras que otros se exiliaron debido a sus ideales políticos y su oposición al régimen franquista.
+                                </p><p></p><p></p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Literatura' { 
+            title 'Conclusión' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>La Generación del 27, con su fulgurante aparición en el panorama cultural español de la década de 1920, dejó una huella imborrable en la historia literaria y artística no solo de España, sino también a nivel internacional. Este movimiento, forjado en un contexto de cambios políticos y sociales, se caracterizó por su profundo afán de innovación, su valiente ruptura con las convenciones establecidas y su búsqueda constante de nuevas formas de expresión.
+                                </p><p>El vanguardismo y la experimentación fueron las bases sobre las que se cimentó este grupo de escritores, poetas y artistas. Inspirados por las corrientes vanguardistas europeas, como el surrealismo y el cubismo, los miembros del 27 se aventuraron en territorios inexplorados en la literatura y el arte, fusionando palabras e imágenes, explorando las dimensiones sonoras y rítmicas del lenguaje y excavando en las profundidades de la psique humana.
+                                </p><p>La poesía, en particular, se convirtió en un bastión donde la Generación del 27 desplegó su maestría creativa. Figuras icónicas como Federico García Lorca, Rafael Alberti, Vicente Aleixandre y Luis Cernuda transformaron las palabras en instrumentos para transmitir emociones intensas y realidades subyacentes. Los temas abordados fueron vastos y variados, desde lo cotidiano hasta lo trascendental, desde la naturaleza hasta el sufrimiento humano, desde el amor hasta la crítica social. En sus versos, convergieron lo íntimo y lo universal, la poesía y la vida.
+                                </p><p>No obstante, la Generación del 27 también experimentó momentos de desafío y adversidad. El estallido de la Guerra Civil Española en 1936, seguido por la posterior dictadura franquista, marcó un abrupto quiebre en el curso de muchos de sus miembros. Algunos sufrieron persecución, exilio e incluso muerte debido a sus ideales políticos y su espíritu libre. Este sombrío capítulo en la historia de España dejó una cicatriz en el grupo y dispersó a sus integrantes por diversos rincones del mundo, llevando consigo la impronta indeleble de su legado artístico.
+                                </p><p>Hoy en día, la influencia de la Generación del 27 sigue resonando en la literatura y el arte contemporáneo. Su valentía para explorar lo desconocido, su pasión por la libertad de expresión y su insaciable sed de innovación siguen inspirando a creadores de todas las disciplinas. A través de sus obras, este movimiento trascendió las barreras temporales y geográficas, estableciendo un puente entre el pasado y el presente, entre la tradición y la vanguardia. La Generación del 27, con su espíritu vanguardista y su compromiso con la transformación cultural, continuará siendo un faro luminoso en la rica constelación de la historia literaria y artística.
+                                </p><p></p>'
+                            } 
+                } 
+            }
+        }
+    } 
+}    
