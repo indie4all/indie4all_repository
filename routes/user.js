@@ -6,7 +6,6 @@ const { getSignInPage,
     getProfile,
     getEditUserForm,
     editUser,
-    getUser,
     googleSignIn,
     getAllUsers,
     deleteUser,
@@ -23,7 +22,6 @@ const upload = require("../middlewares/configureMulter");
 
 const router = Router();
 
-//Sign in/up end-points
 router.get('/sign/in', getSignInPage);
 
 router.get('/sign/up', getSignUpPage);
@@ -41,20 +39,15 @@ router.post('/sign/up', [
     validateFields
 ], signUpNewUser)
 
-//Google Sign In
 router.post('/sign/google', [
     check('id_token', 'id_token is mandatory').not().isEmpty(),
     validateFields
 ], googleSignIn);
 
-
-//Profile end-point
 router.get('/profile', [
     validateJwt
 ], getProfile)
 
-
-//Edit user end-points
 router.get('/edit/:id', [
     validateJwt,
     check('id', 'Not valid ID').isMongoId(),
@@ -68,14 +61,12 @@ router.post('/edit/:id', [
     upload.single('image')
 ], editUser)
 
-//Get all users end-point
 router.get('/get/all', [
     validateJwt,
     check('page', 'Page parameter should be an integer').isInt(),
     validateFields
 ], getAllUsers);
 
-//Delete user end-points
 router.delete('/delete/:id', [
     validateJwt,
     check('id', 'Misssing User Id').not().isEmpty(),
@@ -84,29 +75,24 @@ router.delete('/delete/:id', [
     validateFields
 ], deleteUser);
 
-//Get add user form
 router.get('/add/form', [
     validateJwt,
     check('id').custom( isAdminRole )
 ], getAddUserForm);
 
-//Get add user form
 router.post('/add-user', [
     validateJwt,
     upload.single('image')
 ], addNewUser);
 
-//Get logged in user
 router.get('/current', [
     validateJwt,
 ], getCurrentUser)
 
-//Get all users page
 router.get('/all/page', [
     validateJwt,
 ], getAllUsersPage)
 
 router.get('/iflogged', checkIfLogged)
-
 
 module.exports = router;

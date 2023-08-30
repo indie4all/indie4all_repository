@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500&display=swap');
+
+#link:hover {
+    opacity: 1;
+}
+
+#link {
+    opacity: 0.5;
+    display: inline-block;
+}
+
+.transition {
+    -webkit-transition: all .3s ease;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+    transition-property: all;
+    -moz-transition: all .3s ease;
+    -ms-transition: all .3s ease;
+    transition: all .3s ease;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+    transition-property: all;
+}
+
+.increased-font {
+    font-size: 2.4rem;
+    text-align: justify;
+
+    color: #1E3756;
+    font-family: 'DM Sans', sans-serif;
+}
+
+#link {
+    font-size: 2.4rem;
+    text-align: justify;
+    color: #1E3756;
+    font-family: 'DM Sans', sans-serif;
+
+}
+
+#carouselUnits {
+    padding-bottom: 5%;
+    padding-top: 5%;
+}
+
+@media (max-width: 768px) {
+    .small-text {
+        font-size: 2rem;
+    }
+}
+
+.container-home {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}

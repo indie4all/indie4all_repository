@@ -1,6 +1,6 @@
 <section class="sign-up-section">
 
-  <link rel="stylesheet" href="/css/up.css">
+  <link rel="stylesheet" href="/css/signUp.css">
 
   <div id="errorMessagesDiv">
     {{#if message}}
@@ -11,7 +11,7 @@
   </div>
 
   <div>
-    <p class="font-weight-bold">Create an account</p>
+    <h4 class="font-weight-bold text-center">Create an account</h4>
   </div>
 
 
@@ -43,48 +43,17 @@
       <span id="error-password" style="color: red;" class="d-block"></span>
     </div>
 
-    {{!-- <label for="name">Name:</label>
-    <input type="text" id="nameInput" name="name" placeholder="Name"
-      pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}"
-      required><br> --}}
-
-    {{!-- <div class="form-group">
-      <input type="text" id="nameInput" name="name" placeholder="Full Name"
-        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
-      <span id="error-name" style="color: red;" class="d-block"></span>
-    </div> --}}
-
-    {{!-- <div class="form-group">
-      <input type="text" id="emailInput" name="email" placeholder="Email"
-        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
-      <span id="error-email" style="color: red;" class="d-block"></span>
-    </div> --}}
-
-    {{!-- <div class="form-group">
-      <input type="password" id="passowrdInput" name="password" placeholder="Password" required>
-      <span id="error-password" style="color: red;"></span>
-    </div> --}}
-    {{!-- <label for="email">Email:</label>
-    <input type="text" id="emailInput" name="email" placeholder="Email"
-      pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required><br>
-    <span id="error-email" style="color: red;"></span> --}}
-
-
-    {{!-- <label for="password">Contraseña:</label>
-    <input type="password" id="passowrdInput" name="password" placeholder="Password" pattern="[A-Za-z0-9!?-]{8,12}"
-      required><br>
-    <span id="error-password" style="color: red;"></span> --}}
-
     <button type="submit" id="signUpButton">Sign up</button>
   </form>
 
   <div class="text">
-    <p>If you have a account. <a href="/user/sign/in">Sign in</a></p>
+    <p class="text-center">If you have a account. <a href="/user/sign/in">Sign in</a></p>
   </div>
+
 </section>
 
 <script>
-  //const emailInput = document.getElementById('emailInput');
+
   const emailError = document.getElementById('error-email');
   var button = document.getElementById('signUpButton');
 
@@ -103,7 +72,6 @@
     }
   }
 
-  //Hide header and footer
   const header = document.getElementsByTagName("header")[0].remove();
   document.addEventListener("DOMContentLoaded", function () {
     var footer = document.getElementById("footer");

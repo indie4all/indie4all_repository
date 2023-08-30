@@ -48,8 +48,7 @@ const UnitSchema = Schema({
         default: 'PRIVATE'
     },
     color: {
-        type: String,
-        required: [true, 'Color is mandatory']
+        type: String
     },
     cover: {
         type: String,
@@ -67,4 +66,5 @@ const UnitSchema = Schema({
 });
 
 UnitSchema.plugin(mongoosePaginate);
+
 module.exports = model( 'Unit', UnitSchema );

@@ -6,7 +6,6 @@ const storage = multer.diskStorage({
         cb(null, './public/assets/usersImgs')
     },
     filename: (req, file, cb) => {
-        console.log(file);
         cb(null, Date.now() + path.extname(file.originalname))
     }
 });
@@ -14,6 +13,6 @@ const storage = multer.diskStorage({
 module.exports = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 10, // 10mb max size,
+        fileSize: 1024 * 1024 * 10,
     }
-  });
+});

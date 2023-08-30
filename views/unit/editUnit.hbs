@@ -1,40 +1,184 @@
-<form method="POST" action="/unit/edit/{{unit.resourceId}}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
 
-    <label for="title">Title:</label><br>
-    <input type="text" id="title" name="title" value="{{unit.title}}" required><br><br>
+<link rel="stylesheet" href="/css/editUnit.css">
 
-    {{#isEqual unit.theme "Custom"}}
-    <label for="imageUpload">Cover:</label><br>
-    <img src="{{unit.cover}}"><br><br>
-    <input type="file" name="imageUpload" id="imageUpload" accept="image/jpeg, image/png"
-        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"><br><br>
-    {{/isEqual}}
+<div class="container-xl px-4 mt-4">
 
-    <label for="user">User:</label><br>
-    <input type="text" id="user" name="user" value="{{unit.user}}" required><br><br>
+    <div class="row">
+        <div class="col">
+            <!-- Unit cover card-->
+            <div class="card mb-4 h-100">
+                <div class="card-header">Unit Cover</div>
+                <img id="imagePreview" class="img-fluid img-thumbnail object-fit-cover" src="{{unit.cover}}" alt="">
+            </div>
+        </div>
+    </div>
+    <br>
 
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" value="{{unit.email}}"
-        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required><br><br>
-    <span id="error-email" style="color: red;"></span>
+    <div class="row">
 
-    <label for="institution">Institution:</label><br>
-    <input type="text" id="institution" name="institution" value="{{unit.institution}}" required><br><br>
+        <div class="col">
+            <!-- Unit details card-->
+            <div class="card mb-4 h-100">
+                <div class="card-header">Unit Details</div>
+                <div class="card-body">
+                    <form action="/unit/edit/{{unit.resourceId}}" method="POST" enctype="multipart/form-data">
 
-    <label for="language">Language:</label><br>
-    <select id="language" name="language">
-        <option value="">Select a language</option>
-        <option value="EN" {{#isEqual unit.language "EN" }}selected{{/isEqual}}>English</option>
-        <option value="ES" {{#isEqual unit.language "ES" }}selected{{/isEqual}}>Spanish</option>
-        <option value="FR" {{#isEqual unit.language "FR" }}selected{{/isEqual}}>French</option>
-        <option value="EL" {{#isEqual unit.language "EL" }}selected{{/isEqual}}>Greek</option>
-        <option value="LT" {{#isEqual unit.language "LT" }}selected{{/isEqual}}>Lithuanian</option>
-    </select><br><br>
+                        <!-- Form Group (title)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputTitle">Title</label>
+                            <input class="form-control" id="inputTitle" name="title" type="text"
+                                placeholder="Enter unit title" value="{{unit.title}}" required>
+                        </div>
 
-    {{#isEqual unit.theme "Custom"}}
-    <label for="color">Color:</label><br>
-    <input type="color" id="color" name="color" class="color-input" value="{{unit.color}}"><br><br>
-    {{/isEqual}}
+                        <!-- Form Group (cover)-->
+                        {{#isEqual unit.theme "Custom"}}
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputImage">Unit Cover</label>
+                            <input class="form-control" id="inputImage" name="image" accept="image/*" type="file"
+                                onchange="validateImage(this)">
+                            <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 10 MB</div>
+                        </div>
+                         {{/isEqual}}
 
-    <input type="submit" value="Save"><br><br>
-</form>
+                        <!-- Form Group (user)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputUser">User</label>
+                            <input class="form-control" id="inputUser" name="user" type="text"
+                                placeholder="Enter unit author" value="{{unit.user}}" required>
+                        </div>
+
+                        <!-- Form Group (email address)-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="email">Email address</label>
+                                    <input class="form-control" id="emailInput" name="email" type="email"
+                                        placeholder="Enter email address" value="{{unit.email}}"
+                                        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                                        required>
+                                    <span id="error-email" style="color: red;"></span>
+                                </div>
+                            </div>
+
+                            <!-- Form Group (intitucion)-->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="institutionInput">Institution</label>
+                                    <input class="form-control" id="institutionInput" name="institution" type="text"
+                                        placeholder="Enter the institution" value="{{unit.institution}}"
+                                        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$">
+                                    <span id="error-institution" style="color: red;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Form Group (language)-->
+                        <div class="row">
+
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="language">Language</label>
+                                    <select class="form-control" id="language" name="language">
+                                        <option value="">Select a language</option>
+                                        <option value="EN" {{#isEqual unit.language "EN" }}selected{{/isEqual}}>English
+                                        </option>
+                                        <option value="ES" {{#isEqual unit.language "ES" }}selected{{/isEqual}}>Spanish
+                                        </option>
+                                        <option value="FR" {{#isEqual unit.language "FR" }}selected{{/isEqual}}>French
+                                        </option>
+                                        <option value="EL" {{#isEqual unit.language "EL" }}selected{{/isEqual}}>Greek
+                                        </option>
+                                        <option value="LT" {{#isEqual unit.language "LT" }}selected{{/isEqual}}>
+                                            Lithuanian</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{#isEqual unit.theme "Custom"}}
+                            <!-- Form Group (theme)-->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="color">Color</label>
+                                    <input class="form-control form-control-color" id="color" name="color" type="color"
+                                        value="{{unit.color}}">
+                                </div>
+                            </div>
+                            {{/isEqual}}
+                        </div>
+                </div>
+
+                <button class="btn btn-primary" type="submit" id="saveUserButton">Save changes</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/checkSignUpFormFields.js"></script>
+
+<script>
+
+    function showNotification(message, type) {
+        Swal.fire({
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2000
+        }).then(() => {
+            if (type !== 'warning') {
+                window.location.reload();
+            }
+        });
+    }
+
+    function validateImage(inputImage) {
+
+        const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+        const maxFileSize = 10 * 1024 * 1024; // 10 MB
+
+        const selectedFile = inputImage.files[0];
+
+        if (!selectedFile) {
+            showNotification('Please select an image', 'warning');
+            inputImage.value = "";
+            return;
+        }
+
+        const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+        if (!allowedExtensions.includes(fileExtension)) {
+            showNotification("Invalid file type. Allowed formats: " + allowedExtensions.join(", "), 'warning');
+            inputImage.value = "";
+            return;
+        }
+
+        if (selectedFile.size > maxFileSize) {
+            showNotification('File size exceeds the limit of 10 MB', 'warning');
+            inputImage.value = "";
+            return;
+        }
+
+        previewImage(inputImage);
+    }
+
+    function previewImage(input) {
+        const imagePreview = document.getElementById("imagePreview");
+        const selectedFile = input.files[0];
+
+        if (selectedFile) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(selectedFile);
+        } else {
+            imagePreview.src = "";
+        }
+    }
+
+</script>

@@ -1,8 +1,21 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
 
+<link rel="stylesheet" href="/css/addUser.css">
 
 <div class="container-xl px-4 mt-4">
+
+    {{#if google}}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <p class="text-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-google" viewBox="0 0 16 16">
+                <path
+                    d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
+            </svg><br><strong><a href="https://myaccount.google.com/" class="text-center" target="_blank"
+                    rel="noopener noreferrer">Account
+                    managed by Google</a></strong></p>
+    </div>
+    {{else}}
 
     <div class="row">
         <div class="col-xl-4">
@@ -10,9 +23,7 @@
             <div class="card mb-4 h-100">
                 <div class="card-header">Profile Picture</div>
                 <div class="card-body text-center">
-                    <!-- Profile picture image-->
                     <img id="imagePreview" class="img-fluid img-thumbnail" src="{{loggedInUser.image}}" alt="">
-                    <!-- Profile picture help block-->
                 </div>
             </div>
         </div>
@@ -95,19 +106,31 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Save changes button-->
+
                         <button class="btn btn-primary" type="submit" id="saveUserButton">Save changes</button>
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    {{/if}}
 </div>
 
 
 <script src="/js/checkSignUpFormFields.js"></script>
 
 <script>
+
+    const showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
+    showPasswordCheckbox.addEventListener("change", function () {
+        var passwordInput = document.getElementById("passowrdInput");
+        if (this.checked) {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    });
 
     function showNotification(message, type) {
         Swal.fire({
@@ -125,26 +148,26 @@
     function validateImage(inputImage) {
 
         const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
-        const maxFileSize = 10 * 1024 * 1024; // 5 MB
+        const maxFileSize = 10 * 1024 * 1024; // 10 MB
 
         const selectedFile = inputImage.files[0];
 
         if (!selectedFile) {
             showNotification('Please select an image', 'warning');
-            inputImage.value = ""; // Clear the input
+            inputImage.value = "";
             return;
         }
 
         const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
         if (!allowedExtensions.includes(fileExtension)) {
             showNotification("Invalid file type. Allowed formats: " + allowedExtensions.join(", "), 'warning');
-            inputImage.value = ""; // Clear the input
+            inputImage.value = "";
             return;
         }
 
         if (selectedFile.size > maxFileSize) {
             showNotification('File size exceeds the limit of 10 MB', 'warning');
-            inputImage.value = ""; // Clear the input
+            inputImage.value = "";
             return;
         }
 
@@ -168,121 +191,4 @@
         }
     }
 
-
-</script>
-
-<style>
-    body {
-        margin-top: 20px;
-        background-color: #f2f6fc;
-        color: #69707a;
-    }
-
-    .img-account-profile {
-        height: 10rem;
-    }
-
-    .rounded-circle {
-        border-radius: 50% !important;
-    }
-
-    .card {
-        box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
-    }
-
-    .card .card-header {
-        font-weight: 500;
-    }
-
-    .card-header:first-child {
-        border-radius: 0.35rem 0.35rem 0 0;
-    }
-
-    .card-header {
-        padding: 1rem 1.35rem;
-        margin-bottom: 0;
-        background-color: rgba(33, 40, 50, 0.03);
-        border-bottom: 1px solid rgba(33, 40, 50, 0.125);
-    }
-
-    .form-control,
-    .dataTable-input {
-        display: block;
-        width: 100%;
-        padding: 0.875rem 1.125rem;
-        font-size: 0.875rem;
-        font-weight: 400;
-        line-height: 1;
-        color: #69707a;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #c5ccd6;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        border-radius: 0.35rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-
-    .nav-borders .nav-link.active {
-        color: #0061f2;
-        border-bottom-color: #0061f2;
-    }
-
-    .nav-borders .nav-link {
-        color: #69707a;
-        border-bottom-width: 0.125rem;
-        border-bottom-style: solid;
-        border-bottom-color: transparent;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        padding-left: 0;
-        padding-right: 0;
-        margin-left: 1rem;
-        margin-right: 1rem;
-    }
-
-    .btn {
-        background-color: #D41857;
-        border-color: #D41857;
-    }
-
-    .btn:hover {
-        background-color: #D41857;
-        border-color: #D41857;
-        filter: brightness(90%);
-    }
-
-    .btn:disabled {
-        background-color: #000000;
-        border-color: #000000;
-        filter: brightness(90%);
-    }
-</style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-    showPasswordCheckbox.addEventListener("change", function () {
-        var passwordInput = document.getElementById("password");
-        if (this.checked) {
-            passwordInput.type = "text";
-        } else {
-            passwordInput.type = "password";
-        }
-    });
 </script>

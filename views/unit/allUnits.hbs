@@ -1,12 +1,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
-<div class="container">
 
-    {{!-- <div id="uploadUnitSection">
-        <button class="btn btn-primary" id="chooseFileButton"> Upload json unit file </button>
-        <input type="file" id="jsonFileInput" accept=".json" style="display: none" /><br><br>
-        <button class="btn btn-primary" id="saveButton">Save unit</button>
-    </div><br> --}}
+<link rel="stylesheet" href="/css/allUnits.css">
+
+<div class="container">
 
     <div class="input-group" id="uploadUnitSection">
         <input type="file" class="form-control" accept=".json" id="jsonFileInput"
@@ -14,41 +11,25 @@
         <button class="btn btn-primary" type="button" id="saveButton">Save unit</button>
     </div><br>
 
-    {{!-- <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary">Left</button>
-                <button type="button" class="btn btn-primary">Middle</button>
-                <button type="button" class="btn btn-primary">Right</button>
-            </div>
-        </div>
-    </div> --}}
-
-
     <div id="listOfUnits" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
     </div>
-
-
 
     <div class="pagination">
         <button class="pagination__button" id="previous-button">Previous</button>
         <span class="pagination__info">Page <span id="current-page">1</span></span>
         <button class="pagination__button" id="next-button">Next</button>
     </div>
+
 </div>
 
 
 <script>
 
+
     const previousButton = document.getElementById('previous-button');
     const nextButton = document.getElementById('next-button');
     const currentPageElement = document.getElementById('current-page');
 
-    // Agregar la tarjeta al contenedor
     const tarjetaContainer = document.getElementById('listOfUnits');
 
     let currentPage = 1;
@@ -67,8 +48,6 @@
             currentPage--;
             updatePage();
             fetchUnits();
-
-            // Lógica adicional para cargar los datos de la página anterior
         }
     }
 
@@ -77,7 +56,6 @@
         currentPage++;
         updatePage();
         fetchUnits();
-        // Lógica adicional para cargar los datos de la página siguiente
     }
 
     function updatePage() {
@@ -100,11 +78,9 @@
                 nextButton.classList.remove('hidden');
             }
 
-            //Clean list of units div to put the nex page
             tarjetaContainer.innerHTML = '';
 
             Array.prototype.forEach.call(unitsPerPage.allUnits, unit => {
-
 
                 const cardContentCode = `
                 <div class="card mb-4">
@@ -120,18 +96,15 @@
                         </div>
                 </div>`;
 
-                //Creo el elemento y le pongo el codigo hmtl de arriba
                 const colElement = document.createElement('div');
                 colElement.classList.add('col');
                 colElement.innerHTML = cardContentCode;
 
-                //Coloco el padre en mi div que contendrá todas las unidades
                 tarjetaContainer.appendChild(colElement);
 
 
             });
 
-            // Scroll to the top of the page when finish fetching new units
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (error) {
@@ -172,8 +145,6 @@
                 if (!response.ok) {
                     throw new Error('Error while deleting unit');
                 }
-                // La solicitud se completó con éxito
-                console.log('Unit succesfully deleted');
                 showNotification('Unit deleted successfully.', 'success');
             })
             .catch(error => {
@@ -203,7 +174,6 @@
 
         if (file) {
 
-            //Check if the file is a json file
             const fileExtension = file.name.split('.').pop().toLowerCase();
             if (fileExtension !== 'json') {
                 showNotification('Only JSON files are allowed', 'warning');
@@ -231,10 +201,13 @@
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Error al enviar los datos JSON');
+                    if (response.status == 409) {
+                        showNotification('Unit already exists', 'warning');
+                    } else {
+                        throw new Error('Error sending unit');
+                    }
                 }
-                // La solicitud se completó con éxito
-                console.log('Datos JSON enviados correctamente');
+                showNotification('Unit saved successfully', 'success');
             })
             .catch(error => {
                 console.error(error);
@@ -242,73 +215,3 @@
     }
 
 </script>
-
-
-
-
-<style>
-    .pagination {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
-    .pagination__button {
-        background-color: #f1f1f1;
-        border: none;
-        color: #555;
-        padding: 8px 16px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 14px;
-        cursor: pointer;
-    }
-
-    .pagination__info {
-        margin: 0 10px;
-    }
-
-    .pagination__button:hover {
-        background-color: #ddd;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    .card {
-        border: 1px solid #ccc;
-        padding: 20px;
-        text-align: center;
-    }
-
-    .card img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    body {
-        background-color: white;
-    }
-
-    .btn {
-        background-color: #D41857;
-        border-color: #D41857;
-    }
-
-    .btn:hover {
-        background-color: #D41857;
-        border-color: #D41857;
-        filter: brightness(90%);
-    }
-
-    .grow-hover {
-        transition: transform 0.2s;
-    }
-
-    .grow-hover:hover {
-        transform: scale(1.05);
-    }
-</style>

@@ -1,6 +1,6 @@
 <section class="sign-in-section">
 
-  <link rel="stylesheet" href="/css/in.css">
+  <link rel="stylesheet" href="/css/signIn.css">
 
   <div id="errorMessagesDiv">
     {{#if message}}
@@ -10,42 +10,43 @@
     {{/if}}
   </div>
 
+  <div>
+    <h4 class="font-weight-bold text-center">Log in</h4>
+  </div>
+
   <div id="logo-container">
-    <img id="login-logo"  src="/assets/img/indie-login-logo.png"
-  </div>
-  
-  <form class="sign-in-form" action="/user/sign/in" method="POST">
-    <div class="form-group">
-      {{!-- <label for="email">Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> --}}
+    <img id="login-logo" src="/assets/img/indie-login-logo.png" </div>
 
-      <input type="text" id="email" name="email" placeholder="Email"
-        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
-      <span id="error-email" style="color: red;" class="d-block"></span>
-    </div>
-    <div class="form-group">
+    <form class="sign-in-form" action="/user/sign/in" method="POST">
 
-      {{!-- <label for="password">Password:&nbsp;</label> --}}
-      <input type="password" id="password" name="password" placeholder="Password" required>
-    </div>
-    <button type="submit" id="signInButton">Sign In</button>
-  </form>
-  <div class="text">
-    <p>If you don't have a account. <a href="/user/sign/up">Sign Up</a></p>
-  </div>
+      <div class="form-group">
+        <input type="text" id="email" name="email" placeholder="Email"
+          pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required>
+        <span id="error-email" style="color: red;" class="d-block"></span>
+      </div>
 
+      <div class="form-group">
+        <input type="password" id="password" name="password" placeholder="Password" required>
+      </div>
 
-  <div id="googleSignInButton">
-    <div id="g_id_onload" data-client_id="420441003888-mvopejroboqkvj6n95mp6s89ljshbagl.apps.googleusercontent.com"
-      data-auto_prompt="false" data-callback="handleCredentialResponse">
+      <button type="submit" id="signInButton">Sign In</button>
+
+    </form>
+
+    <div class="text">
+      <p>If you don't have a account. <a href="/user/sign/up">Sign Up</a></p>
     </div>
-    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
-      data-shape="rectangular" data-logo_alignment="left">
+
+    <div id="googleSignInButton">
+      <div id="g_id_onload" data-client_id="420441003888-mvopejroboqkvj6n95mp6s89ljshbagl.apps.googleusercontent.com"
+        data-auto_prompt="false" data-callback="handleCredentialResponse">
+      </div>
+      <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
+        data-shape="rectangular" data-logo_alignment="left">
+      </div>
     </div>
-  </div>
 
 </section>
-
-
 
 
 <script>
@@ -69,8 +70,6 @@
   }
 
   function handleCredentialResponse(response) {
-    // Google ID Token
-    //console.log('Id google token' + response.credential);
 
     const body = { id_token: response.credential }
 
@@ -84,7 +83,7 @@
       .then(resp => {
         if (resp.status == 200) {
           window.location.href = `/`;
-        } else {
+        } else if (resp.status == 401) {
           const errorDiv = document.getElementById('errorMessagesDiv');
           const div = document.createElement('div');
           div.style.wordWrap = 'break-word';
@@ -92,12 +91,20 @@
           const errorMessage = 'User blocked - Contact administrator';
           div.textContent = errorMessage;
           errorDiv.appendChild(div);
+        } else if (resp.status == 400) {
+          const errorDiv = document.getElementById('errorMessagesDiv');
+          const div = document.createElement('div');
+          div.style.wordWrap = 'break-word';
+          div.classList.add('error-message');
+          const errorMessage = 'Please log in with your email and password';
+          div.textContent = errorMessage;
+          errorDiv.appendChild(div);
+
         }
       })
       .catch(console.warn);
   }
 
-  //Hide header and footer
   const header = document.getElementsByTagName("header")[0].remove();
   document.addEventListener("DOMContentLoaded", function () {
     var footer = document.getElementById("footer");
@@ -106,7 +113,5 @@
     }
   });
 
-  //header.style.display = "none";
-  //footer.style.display = "none"
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>

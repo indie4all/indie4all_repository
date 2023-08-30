@@ -34,8 +34,6 @@ const UserSchema = Schema({
     }
 });
 
-
-
 UserSchema.methods.toJSON = function() {
     const { __v, password, _id, ...user  } = this.toObject();
     user.uid = _id;
@@ -43,4 +41,5 @@ UserSchema.methods.toJSON = function() {
 }
 
 UserSchema.plugin(mongoosePaginate);
+
 module.exports = model( 'User', UserSchema );

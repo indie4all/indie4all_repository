@@ -1,17 +1,14 @@
 const { response, request } = require('express');
 const User = require('../models/user');
 const { getJwt } = require('../helpers/getJwt');
-const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const { googleVerify } = require('../helpers/googleVerify');
-const axios = require('axios');
 const path = require('path');
 const fs = require('fs-extra');
 
 const getSignInPage = async (req = request, res = response) => {
-    console.info('Rendering sign in page')
+    console.info('Rendering sign in page...')
 
-    //Tengo que ver si estoy logeado -> si existe token
     const { token } = req.cookies;
     if (token) {
         return res.redirect('/');
@@ -21,7 +18,7 @@ const getSignInPage = async (req = request, res = response) => {
 }
 
 const getSignUpPage = async (req = request, res = response) => {
-    console.info('Rendering sign up page')
+    console.info('Rendering sign up page...')
 
     const { token } = req.cookies;
     if (token) {
@@ -31,9 +28,7 @@ const getSignUpPage = async (req = request, res = response) => {
 }
 
 const signInUser = async (req = request, res = response) => {
-    console.info('Sing In User')
 
-    //Check if email exists
     const email = req.body.email;
     const user = await User.findOne({ 'email': email });
 
@@ -43,14 +38,21 @@ const signInUser = async (req = request, res = response) => {
             message: 'User not found'
         });
     }
-    //Check if user is active
+
     if (!user.status) {
         return res.status(400).render('sign/in', {
             layout: 'layout',
             message: 'User blocked - Contact you administrator'
         });
     }
-    //Check password
+
+    if (user.google) {
+        return res.status(400).render('sign/in', {
+            layout: 'layout',
+            message: 'Please use you Google account'
+        });
+    }
+
     const validPassword = bcryptjs.compareSync(req.body.password, user.password);
     if (!validPassword) {
         return res.status(400).render('sign/in', {
@@ -58,23 +60,17 @@ const signInUser = async (req = request, res = response) => {
             message: 'Email/password not correct'
         });
     }
-    //Create new JWT
+
     const token = await getJwt(user.id);
 
-    //Save token in cookies
     res.cookie('token', token);
 
-    //return res.render('home/index', { layout: 'layout' })
     return res.redirect('/');
 }
 
 const signUpNewUser = async (req = request, res = response) => {
-    console.info('Sign Up New User')
 
-    //Retrieve user
     const { name, email, password } = req.body;
-
-    //Verify if user already exists
     const userExists = await User.findOne({ 'email': email });
     if (userExists) {
         console.info("User already registered");
@@ -84,14 +80,9 @@ const signUpNewUser = async (req = request, res = response) => {
         });
     }
 
-    //Create the new user to save it with USER_ROLE by default
     const user = new User({ name, email, password });
-
-    //Encrypt password
     const salt = bcryptjs.genSaltSync();
     user.password = bcryptjs.hashSync(password, salt);
-
-    //Save in the data base
     await user.save();
 
     return res.status(200).render('sign/in', {
@@ -102,35 +93,25 @@ const signUpNewUser = async (req = request, res = response) => {
 }
 
 const getProfile = async (req = request, res = response) => {
-    console.info('Rendering profile page');
+    console.info('Rendering profile page...');
 
-    console.log(req.uid);
-
-    //Retrieve the user role
     const loggedInUser = await User.findOne({ '_id': req.uid }).lean();
 
-    console.log(loggedInUser);
-
-    //Check if the user is admin and have access to 'Users' tab
     let admin = false;
     if (loggedInUser.role == 'ADMIN_ROLE') {
         admin = true;
     }
 
-    //Retrieve all the users
-    //const allUsers = await User.find({}).lean();
-
     res.render('user/profile', {
         layout: 'layout',
-        //allUsers: allUsers,
         admin: admin,
         loggedInUser: loggedInUser,
-        google: !loggedInUser.google,
+        google: loggedInUser.google,
     })
 }
 
 const getEditUserForm = async (req = request, res = response) => {
-    console.info('Rendering edit user page')
+    console.info('Rendering edit user page...');
 
     const uid = req.params.id;
     const user = await User.findOne({ '_id': uid }).lean();
@@ -143,12 +124,9 @@ const getEditUserForm = async (req = request, res = response) => {
 const editUser = async (req = request, res = response) => {
     console.info('Editing user...');
 
-    //Retrieve original user data
     const uid = req.params.id;
     const originalUser = await User.findOne({ '_id': uid }).lean();
-
     const imagePath = req.file ? req.file.path : 'public\\assets\\usersImgs\\default-user-image.jpg';
-
     const basePath = 'public';
 
     let relativeImagePath;
@@ -160,7 +138,6 @@ const editUser = async (req = request, res = response) => {
         relativeImagePath = '/' + path.relative(basePath, imagePath).replace(/\\/g, '/');
     }
 
-    //Retrieve changed user data
     const updatedUser = {
         uid: uid,
         name: req.body.name,
@@ -171,14 +148,11 @@ const editUser = async (req = request, res = response) => {
         image: relativeImagePath
     };
 
-    //Check if password has changed
     if (originalUser.password != updatedUser.password) {
-        //Encrypt password when changes
         const salt = bcryptjs.genSaltSync();
         updatedUser.password = bcryptjs.hashSync(updatedUser.password, salt);
     }
 
-    //Save in the database
     await User.findByIdAndUpdate(uid, updatedUser).then(() => {
         res.redirect('/user/all/page');
         console.info('User edited succesfully');
@@ -188,59 +162,42 @@ const editUser = async (req = request, res = response) => {
 
 }
 
-const getUser = async (req = request, res = response) => {
-    const uid = req.params.id;
-
-    res.json({
-        uid: uid
-    })
-}
-
 const getCurrentUser = async (req = request, res = response) => {
 
     console.info(`Retrieving current user...`);
-    //Retrieve the user role
 
-    console.log(req.uid);
     const loggedInUser = await User.findOne({ '_id': req.uid }).lean();
-
-    console.log(loggedInUser);
 
     res.json({
         currentUser: loggedInUser
     })
 }
 
-
 const googleSignIn = async (req = request, res = response) => {
-    console.info('Rendering google sin in page')
 
     const { id_token } = req.body;
-
-    //Verificar id token de google
-
     try {
 
         const { name, email } = await googleVerify(id_token);
-        console.log(name, email);
 
-        //Ver si ese correo ya existe en la base de datos
         let user = await User.findOne({ 'email': email })
 
+        if (!user.google) {
+            return res.status(400).json({
+                msg: 'Please log in with your email and password'
+            });
+        }
+
         if (!user) {
-            //Si usuario no existe -> crearlo
             const userData = {
                 name,
                 email,
                 password: ':P',
                 google: true
             };
-
             user = new User(userData);
             await user.save()
         }
-
-        //Si el usuario en DB tiene estado false
 
         if (!user.status) {
             return res.status(401).json({
@@ -248,9 +205,7 @@ const googleSignIn = async (req = request, res = response) => {
             });
         }
 
-        //Generar JWT
         const token = await getJwt(user.id);
-        //Save token in cookies
         res.cookie('token', token);
 
         return res.status(200).json({
@@ -261,19 +216,16 @@ const googleSignIn = async (req = request, res = response) => {
         return res.status(500).redirect('/');
     }
 
-
 }
 
 const getAllUsers = async (req = request, res = response) => {
     console.info('Getting all the users...');
 
-    //Retreieve page number from params
     const page = parseInt(req.query.page) || 1;
     const limit = 12;
 
-    const { docs, totalDocs, totalPages } = await User.paginate({}, { page, limit });
+    const { docs, totalPages } = await User.paginate({}, { page, limit });
 
-    //Retrieve paginated users
     res.json({
         usersPerPage: docs,
         totalUsersPages: totalPages,
@@ -290,7 +242,6 @@ const deleteUser = async (req = request, res = response) => {
 
     if (user.image != '/assets/usersImgs/default-user-image.jpg') {
 
-        //********* BORRAR TAMBIEN LA FOTO DE PERFIL SI ES DIFERENTE A LA DEFAULT *********//
         const imagePath = user.image;
         const basePath = 'public';
         const completePath = path.join(basePath, imagePath);
@@ -299,29 +250,27 @@ const deleteUser = async (req = request, res = response) => {
             if (err) {
                 console.error('Error while deleting profile image', err);
             } else {
-                console.log('Profile image deleted succesfully');
+                console.info('Profile image deleted succesfully');
             }
         });
-
     }
 
     res.json({
         user,
     });
 }
+
 const getAllUsersPage = async (req = request, res = response) => {
     console.info('Rendering all users page...');
 
     res.render('user/allUsers', { layout: 'layout' })
 }
+
 const getAddUserForm = async (req = request, res = response) => {
-    console.info('Retrieving form to add new user...');
+    console.info('Retrieving add new user form...');
 
     res.render('user/addUser', { layout: 'layout' })
 }
-
-
-
 
 const addNewUser = async (req = request, res = response) => {
     console.info('Adding new user...');
@@ -330,7 +279,6 @@ const addNewUser = async (req = request, res = response) => {
 
     const basePath = 'public';
     const relativeImagePath = '/' + path.relative(basePath, imagePath).replace(/\\/g, '/');
-    console.log(relativeImagePath);
 
     const newUser = {
         name: req.body.name,
@@ -342,7 +290,6 @@ const addNewUser = async (req = request, res = response) => {
     };
 
     const emailExists = await User.findOne({ 'email': newUser.email });
-
 
     if (emailExists) {
         if (emailExists.status) {
@@ -360,14 +307,11 @@ const addNewUser = async (req = request, res = response) => {
         }
     }
 
-    //Create the new user to save it with USER_ROLE by default
     const user = new User(newUser);
 
-    //Encrypt password
     const salt = bcryptjs.genSaltSync();
     user.password = bcryptjs.hashSync(user.password, salt);
 
-    //Save in the database
     await user.save().then(() => {
         res.render('user/allUsers', {
             layout: 'layout',
@@ -385,7 +329,6 @@ const checkIfLogged = async (req = request, res = response) => {
 
     const { token } = req.cookies;
 
-    //Check if token exists
     if (token) {
         res.json({
             isLoggedIn: true
@@ -404,7 +347,6 @@ module.exports = {
     getProfile,
     getEditUserForm,
     editUser,
-    getUser,
     googleSignIn,
     getAllUsers,
     deleteUser,

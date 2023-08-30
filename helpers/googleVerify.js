@@ -14,7 +14,6 @@ async function googleVerify( token = '') {
   }
 }
 
-
 module.exports = {
     googleVerify
 }

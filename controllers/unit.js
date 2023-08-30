@@ -15,7 +15,6 @@ const getUnits = async (req = request, res = response) => {
 
     //Retrieve the user role
     const loggedInUser = await User.findOne({ '_id': req.uid }).lean();
-    console.log(loggedInUser)
 
     //Retreieve page number from params
     const page = parseInt(req.query.page) || 1;
@@ -37,28 +36,34 @@ const getUnits = async (req = request, res = response) => {
 }
 
 const addUnit = async (req = request, res = response) => {
-    //TO DO
+
     console.info('Adding unit...');
 
     const resourceId = req.body.resourceId;
 
-    const unit = await Unit.findOne({ 'resourceId': resourceId }).lean();
-
-    if (unit) {
-        console.log('Unidad');
+    //Check if unit already exists
+    const unitExists = await Unit.findOne({ 'resourceId': resourceId }).lean();
+    if (unitExists) {
+        console.info('Unit already exists');
+        res.status(409).json({ message: 'Unit already exists' });
     } else {
-        console.log();
+        const body = req.body;
+        const newUnit = new Unit({
+            ...body
+        });
+
+        //Save new unit in the database
+        await newUnit.save().then(() => {
+            res.status(200).json({ message: 'Unit added correctly' });
+            console.info('Unit added correctly');
+        }).catch(error => {
+            console.error(error);
+            res.status(500);
+        });
 
     }
 
-    console.log(resourceId);
-
-    res.json({
-        msg: 'Ruta /units/add',
-        body: body
-    })
 }
-
 
 const deleteUnit = async (req = request, res = response) => {
 
@@ -67,21 +72,29 @@ const deleteUnit = async (req = request, res = response) => {
     const resourceId = req.query.resourceId;
     const unit = await Unit.findOneAndDelete({ 'resourceId': resourceId });
 
-
-    //Borrar carpeta de la unidad generada si existe:
     const unitPath = path.join('public', resourceId);
     const directoryExists = fs.existsSync(unitPath);
 
+    //Delete generated unit folder if exists
     if (directoryExists) {
-        fs.remove(unitPath)
-            .then(() => {
-                console.log('Directory and its contents successfully deleted.');
-            })
-            .catch((err) => {
-                console.error('Error deleting directory:', err);
-            });
+        await removeDirectoryOrFile(unitPath);
     } else {
-        console.log('Directory does not exist.');
+        console.info(`Directory ${unitPath} does not exist.`);
+    }
+
+    //Delete generated json file if exists
+    const jsonFilePath = `public/assets/units/${resourceId}.json`;
+    const jsonFileExists = fs.existsSync(jsonFilePath);
+    if (jsonFileExists) {
+        await removeDirectoryOrFile(jsonFilePath);
+    }
+
+    //Delete generated upctforma file if exists
+    const upctFormaFilePath = `public/assets/units/${resourceId}.upctForma`;
+    const upctFormaExists = fs.existsSync(jsonFilePath);
+    if (upctFormaExists) {
+        //Delete json file if exists
+        await removeDirectoryOrFile(upctFormaFilePath);
     }
 
     res.json({
@@ -89,9 +102,20 @@ const deleteUnit = async (req = request, res = response) => {
     })
 }
 
+async function removeDirectoryOrFile(path) {
+    fs.remove(path, (err) => {
+        if (err) {
+            console.error(`Error while deleting directory/file ${path}: `, err);
+        } else {
+            console.info('File or directory successfully deleted.');
+        }
+    });
+
+}
+
 const getEditUnitForm = async (req = request, res = response) => {
 
-    console.log("Rendering edit unit form...");
+    console.info("Rendering edit unit form...");
 
     const resourceId = req.params.resourceId;
     const unit = await Unit.findOne({ 'resourceId': resourceId }).lean();
@@ -103,61 +127,121 @@ const getEditUnitForm = async (req = request, res = response) => {
 
 const getAllUnitsPage = async (req = request, res = response) => {
 
-    console.log("Rendering all units page...");
+    console.info("Rendering all units page...");
 
     res.render('unit/allUnits', { layout: 'layout' });
 }
 
 const saveEditedUnit = async (req = request, res = response) => {
 
-    //TO DO
-    console.log("Saving edited unit...");
+    console.info("Saving edited unit...");
 
-    const body = req.body;
-    console.log(body);
+    //Retrieve the edited unit
+    const resourceId = req.params.resourceId;
+    const unit = await Unit.findOne({ 'resourceId': resourceId }).lean();
 
-    res.json({
-        body
-    })
+    let unitImage = unit.cover;
+
+    if (req.file) {
+
+        const newImagePath = req.file.path;
+
+        const rootFolderPath = process.cwd();
+        const newImageRelativePath = path.join(rootFolderPath, newImagePath);
+
+        unitImage = await convertFileToBase64(newImageRelativePath);
+    }
+
+
+    const newColor = req.body.color ? req.body.color : unit.color;
+
+    const updatedUnit = {
+        ...unit,
+        title: req.body.title,
+        cover: unitImage,
+        user: req.body.user,
+        email: req.body.email,
+        institution: req.body.institution,
+        language: req.body.language,
+        color: newColor
+    };
+
+    //Delete generated unit folder if exists
+    const unitPath = path.join('public', resourceId);
+    const directoryExists = fs.existsSync(unitPath);
+
+    if (directoryExists) {
+        await removeDirectoryOrFile(unitPath)
+    } else {
+        console.info(`Directory ${unitPath} does not exist.`);
+    }
+
+    //Delete generated json file if exists
+    const jsonFilePath = `public/assets/units/${resourceId}.json`;
+    const jsonFileExists = fs.existsSync(jsonFilePath);
+    if (jsonFileExists) {
+        await removeDirectoryOrFile(jsonFilePath);
+    }
+
+    //Delete generated upctforma file if exists
+    const upctFormaFilePath = `public/assets/units/${resourceId}.upctForma`;
+    const upctFormaExists = fs.existsSync(jsonFilePath);
+    if (upctFormaExists) {
+        //Delete json file if exists
+        await removeDirectoryOrFile(upctFormaFilePath);
+    }
+
+    await Unit.findByIdAndUpdate(unit._id, updatedUnit).then(() => {
+        res.redirect('/unit/showAll');
+        console.info('Unit edited succesfully');
+    }).catch(error => {
+        console.error(error);
+    });
+
 }
 
+async function convertFileToBase64(newImageRelativePath) {
+    try {
+        const data = await fs.readFile(newImageRelativePath);
+        const unitImage = 'data:image\/jpeg;base64,' + data.toString('base64');
+        console.info('Unit image converted to base64 correctly');
+
+        await fs.unlink(newImageRelativePath);
+        console.info('Unit image removed successfully');
+
+        return unitImage;
+    } catch (err) {
+        console.error('Error:', err);
+        return null;
+    }
+}
 
 const generateContent = async (req = request, res = response) => {
 
     console.info('Generating content...');
 
-
     const resourceId = req.query.resourceId;
-    console.log(resourceId)
 
     //Retrieve unit to use it as example
     const unit = await Unit.findOne({ 'resourceId': resourceId });
-    console.log(unit)
 
-    //Steps:
-    //1. Ver si existe la carpeta de la unidad seleccionada
     const unitPath = path.join('public', unit.resourceId);
     const directoryExists = fs.existsSync(unitPath);
 
     if (directoryExists) {
-        console.log('Directory exists.');
+        console.info(`Directory ${unitPath} exists.`);
     } else {
-        //Si no existe
-        console.log('Directory does not exist.');
 
-        //Creo la carpeta public/unit-resourceId
+        console.info(`Directory ${unitPath} does not exists.`);
+
         await createFolder(unitPath);
 
-        //Creo el archivo json de la unidad
         await createJsonFile(unit);
 
-        //Creo el archivo del estilo stylesCustom.min.css
         await createStyleFile("assets", unit.color, unit.cover);
 
-        //Copy assets folder to unit subfolder
         await copyAssetsToUnitFolder(unit.resourceId);
 
-        //Generar codigo de la unidad con su index.html dentro de la carpeta con su resourceId -> ejecutar generador jar
         await createUnit(unit.resourceId);
     }
     res.json({
@@ -165,7 +249,7 @@ const generateContent = async (req = request, res = response) => {
     });
 }
 
-const copyAssetsToUnitFolder = async (resourceId) => {
+async function copyAssetsToUnitFolder(resourceId) {
 
     const rootFolderPath = process.cwd();
     const assetsFolderPath = path.join(rootFolderPath, 'assets');
@@ -174,72 +258,62 @@ const copyAssetsToUnitFolder = async (resourceId) => {
     fs.copy(assetsFolderPath, unitSubFolderPath, (err) => {
         if (err) {
             console.error('An error occurred while copying the assets folder to the unit sub-folder:', err);
-            console.log(err);
+            console.error(err);
         } else {
-            console.log('Assets folder copied successfully.');
+            console.info('Assets folder copied successfully.');
         }
     });
 
 }
 
-const createUnit = async (resourceId) => {
-
-    //Use that file to execute contentgenerator.jar and generate the content
+async function createUnit(resourceId) {
 
     const command = `java -Dfile.encoding=UTF-8 -jar ./contentgenerator.jar public/assets/units/${resourceId}.json public/${resourceId}`;
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error('Error while generating Unit:', error);
+            console.error('Error output ', stderr);
             return;
         }
-        // El comando Java se ejecutó correctamente
-        console.log('Salida estándar:', stdout);
-        console.error('Salida de error:', stderr);
+        console.info('Standar output', stdout);
+        
     });
 }
 
-const createFolder = async (folderPath) => {
+async function createFolder(folderPath) {
     fs.mkdir(folderPath, { recursive: true }, (err) => {
         if (err) {
-            console.error('An error occurred while creating the folder:');
-            console.log(err)
+            console.error('An error occurred while creating the folder:', err);
         } else {
-            console.log('Folder created successfully.');
+            console.info(`Folder ${folderPath} created successfully.`);
         }
     });
 }
 
-const createJsonFile = async (unit) => {
+async function createJsonFile(unit) {
 
-    //Parse unit to json
     const jsonUnit = JSON.stringify(unit, null, 2);
 
-    //Create json file
     fs.writeFile(`public/assets/units/${unit.resourceId}.json`, jsonUnit, 'utf8', (err) => {
         if (err) {
             console.error('Error while writing JSON file:', err);
         } else {
-            console.log('JSON file successfully saved.');
+            console.info('JSON file successfully saved.');
         }
     });
 }
 
-//Method tu generate the theme style of the unit
-const createStyleFile = async function (folder, color, cover) {
+async function createStyleFile(folder, color, cover) {
 
     console.info("Generating theme style");
 
-    // Generate the css of the current theme
     const realColor = VALID_COLOR_PATTERN.test(color) ? color : '#000000';
     const realCover = VALID_COVER_PATTERN.test(cover) ? cover : 'data:null';
 
     const sassCode = `$base-color: ${realColor}; $base-url: "${realCover}"; @import 'theme.scss';`;
     const scssFilePath = folder + '/generator/content/v4-7-5/css/temporaryStyles.scss'
     const cssFilePath = folder + '/generator/content/v4-7-5/css/stylesCustom.min.css';
-
-    console.log(scssFilePath);
-    console.log(cssFilePath);
 
     fs.writeFile(scssFilePath, sassCode, function (err) {
         if (err) {
@@ -256,15 +330,13 @@ const createStyleFile = async function (folder, color, cover) {
                     fs.writeFile(cssFilePath, result.css, function (err) {
                         if (err) {
                             console.error('Error while compiling SCSS to CSS :', err);
-                            console.error(err);
                         } else {
-                            console.log(`Successfully compiled Sass to CSS. Output file: ${cssFilePath}`);
-                            //Remove scss file
+                            console.info(`Successfully compiled Sass to CSS. Output file: ${cssFilePath}`);
                             fs.unlink(scssFilePath, function (err) {
                                 if (err) {
                                     console.error('Error while removing SCSS file :', err);
                                 } else {
-                                    console.log(' SCSS file removed successfully.');
+                                    console.info(' SCSS file removed successfully.');
                                 }
                             });
                         }
@@ -277,15 +349,12 @@ const createStyleFile = async function (folder, color, cover) {
 
 const getRandomUnits = async (req = request, res = response) => {
 
-    console.log("Getting random units...");
+    console.info("Getting random units...");
 
     const amount = parseInt(req.query.amount);
-
     let response = {};
-
     try {
         const totalUnits = await Unit.countDocuments();
-
         if (totalUnits <= amount) {
             response.flag = 0;
             response.units = [];
@@ -295,14 +364,9 @@ const getRandomUnits = async (req = request, res = response) => {
             while (selectedIndices.size < amount) {
                 selectedIndices.add(Math.floor(Math.random() * totalUnits));
             }
-
-            //const allowDiskUse = { allowDiskUse: true }
             const selectedUnits = await Unit.aggregate([{ $sample: { size: amount } }]).allowDiskUse(true);
-
-
             response.flag = 1;
             response.units = selectedUnits;
-
         }
 
         res.json({ response: response });

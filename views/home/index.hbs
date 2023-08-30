@@ -1,86 +1,4 @@
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500&display=swap');
-
-    body {
-        background-image: url('/assets/img/cropped-book.jpg');
-        background-image: no-repeat;
-        background-image: fixed;
-        background-image: center;
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-        background-attachment: fixed;
-    }
-
-    #homepage-text {
-        text-align: center;
-        font-size: large;
-        color: #000000;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        font-size: auto;
-    }
-
-    #link:hover {
-        opacity: 1;
-    }
-
-    #link {
-        opacity: 0.5;
-        display: inline-block;
-    }
-
-    .transition {
-        -webkit-transition: all .3s ease;
-        transition-duration: 0.3s;
-        transition-timing-function: ease;
-        transition-delay: 0s;
-        transition-property: all;
-        -moz-transition: all .3s ease;
-        -ms-transition: all .3s ease;
-        transition: all .3s ease;
-        transition-duration: 0.3s;
-        transition-timing-function: ease;
-        transition-delay: 0s;
-        transition-property: all;
-    }
-
-    .increased-font {
-        font-size: 2.4rem;
-        text-align: justify;
-       
-        color: #1E3756;
-        font-family: 'DM Sans', sans-serif;
-    }
-
-    #link {
-        font-size: 2.4rem;
-        text-align: justify;
-        color: #1E3756;
-        font-family: 'DM Sans', sans-serif;
-
-    }
-
-    #carouselUnits {
-        padding-bottom: 5%;
-        padding-top: 5%;
-    }
-
-    @media (max-width: 768px) {
-        .small-text {
-            font-size: 2rem;
-        }
-    }
-
-    .container-home{
-        min-height: 80vh;
-    display: flex;
-    align-items: center;
-    }
-</style>
-
+<link rel="stylesheet" href="/css/index.css">
 <div class="container text-center container-home">
 
 
@@ -98,7 +16,6 @@
         </div>
 
         <div class="col-md-6">
-            <!-- Contenido de la parte derecha -->
         </div>
     </div>
 </div>
@@ -283,15 +200,10 @@
                 const apiResponse = data.response;
 
                 if (apiResponse.flag == 0) {
-
-                    //If there are not enoguth units, then hide the carousels
-                    console.log('Not enough units');
+                    console.info('Not enough units');
                     var carouselUnitsDiv = document.getElementById("carouselUnits");
                     carouselUnitsDiv.remove();
-
                 } else {
-
-                    //If there are enoguth units, then show the carousels
                     showUnits(apiResponse.units);
                 }
             })
@@ -307,12 +219,10 @@
 
                 const cardDivCode = `<div class="card text-bg-dark" style="font-family: Arial,Helvetica,sans-serif; background-image: url(${units[index].cover}); background-size: cover; background-position: center center;" onclick="viewUnit('${units[index].resourceId}')">
                                         <img src="/assets/img/transparent-image.png" class="card-img opacity-75" style="width: auto; height: 450px;">
-                                    <div class="card-img-overlay">
-                                        <h5 class="card-title"><strong>${units[index].title}</strong></h5>
-                                    </div>
-                                </div>`;
-
-                // <img src="${units[index].cover}" class="card-img opacity-75" style="width: auto; height: 450px;">
+                                        <div class="card-img-overlay">
+                                            <h5 class="card-title"><strong>${units[index].title}</strong></h5>
+                                        </div>
+                                    </div>`;
 
                 const cardDivElement = document.createElement('div');
                 cardDivElement.innerHTML = cardDivCode;

@@ -4,6 +4,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
+<link rel="stylesheet" href="/css/header.css">
+
 <main>
   <div class="container">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4">
@@ -31,17 +33,14 @@
 
 <script>
 
-  //Si no hay token = no esta logeado -> no mostrar la lista de menus
   fetch('/user/iflogged')
     .then(response => response.json())
     .then(data => {
       if (!data.isLoggedIn) {
-        // No esta loggeado: no mostrar home, menu, etc
         const headerOptions = document.getElementById('headerOptions');
         headerOptions.remove();
 
       } else {
-        // Si esta loggeado: no mostrar sign buttons
         const signButtons = document.getElementById('signButtons');
         signButtons.remove();
         checkUserRole();
@@ -50,7 +49,6 @@
     .catch(error => console.error(error));
 
   async function checkUserRole() {
-    //Get user: para saber role y ver si mostrar users o no
     const usersButton = document.getElementById("usersBtn");
     const currentUser = await getUser();
     if (currentUser.role !== 'ADMIN_ROLE') {
@@ -65,34 +63,3 @@
   }
 
 </script>
-
-<style>
-  body {
-    background-image: url('/assets/img/cropped-book.jpg');
-    background-image: no-repeat;
-    background-image: fixed;
-    background-image: center;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-attachment: fixed;
-  }
-
-  .btn {
-    background-color: #D41857;
-    border-color: #D41857;
-  }
-
-  .btn:hover {
-    background-color: #D41857;
-    border-color: #D41857;
-    filter: brightness(90%);
-  }
-
-  .btn-outline-primary {
-    border-color: #D41857;
-    color: #D41857;
-    background-color: transparent;
-  }
-</style>

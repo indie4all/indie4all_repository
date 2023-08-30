@@ -10,6 +10,7 @@ const { getUnits,
 const validateJwt = require('../middlewares/validateJwt');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validateFields');
+const upload = require("../middlewares/configureMulter");
 
 const router = Router();
 
@@ -27,9 +28,8 @@ router.get('/generatecontent', [
 
 router.post('/add', [
     validateJwt,
-], addUnit); // TO DO
+], addUnit);
 
-//Edit unit end-points
 router.get('/edit/:resourceId', [
     validateJwt,
     check('resourceId', 'Resource Id parameter is mandatory').not().isEmpty(),
@@ -39,8 +39,9 @@ router.get('/edit/:resourceId', [
 router.post('/edit/:resourceId', [
     validateJwt,
     check('resourceId', 'Resource Id parameter is mandatory').not().isEmpty(),
-    validateFields
-], saveEditedUnit); // TO DO
+    validateFields,
+    upload.single('image')
+], saveEditedUnit);
 
 router.delete('/delete', [
     validateJwt,
@@ -48,12 +49,10 @@ router.delete('/delete', [
     validateFields
 ], deleteUnit);
 
-//Get all units page
 router.get('/showAll', [
     validateJwt
 ], getAllUnitsPage);
 
-//Get certain amount of random units
 router.get('/random', [
     check('amount', 'Amount parameter should be an integer').isInt(),
 ], getRandomUnits);

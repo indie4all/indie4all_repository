@@ -1,0 +1,16 @@
+.btn {
+    background-color: #D41857;
+    border-color: #D41857;
+}
+
+.btn:hover {
+    background-color: #D41857;
+    border-color: #D41857;
+    filter: brightness(90%);
+}
+
+.btn-outline-primary {
+    border-color: #D41857;
+    color: #D41857;
+    background-color: transparent;
+}

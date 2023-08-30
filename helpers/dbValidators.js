@@ -1,4 +1,3 @@
-const { Exception } = require('handlebars');
 const Role = require('../models/role');
 const User = require('../models/user');
 
@@ -12,22 +11,18 @@ const isValidRole = async (role = '') => {
 
 const isAdminRole = async (id = '') => {
 
-    //Retrieve the logged in user
     const user = await User.findOne({ '_id': req.uid });
 
-    //Check if the user is admin
     if (user.role != 'ADMIN_ROLE') {
         throw new Error(`User ${user.name} is not an admin`);
     }
 }
 
 const emailExists = async (email = '') => {
-    console.log('Estoy viendo si existe el usuario')
+
     const emailExists = await User.findOne({ '_id': req.uid}).lean();
     
     if (emailExists) {
-        console.log('dentro del if');
-
         throw new Error(`Email: ${email}, already exists`);
     }
 }
@@ -48,9 +43,6 @@ const findUnitById = async (id) => {
     }
 }
 
-
-
-
 module.exports = {
     isValidRole,
     emailExists,
@@ -58,4 +50,3 @@ module.exports = {
     isAdminRole,
     findUnitById
 }
-

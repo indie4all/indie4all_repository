@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
 
+<link rel="stylesheet" href="/css/allUsers.css">
+
 <div class="container">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +11,6 @@
     <div class="alert alert-success" id="alertContainer" role="alert">
         {{ message }}
     </div>
-
-
 
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary" id="add-user-button">Add user</button>
@@ -29,8 +29,6 @@
 
 <script>
 
-
-
     const alertDiv = document.getElementById("alertContainer");
 
     function hideAlert() {
@@ -43,7 +41,6 @@
     const nextButton = document.getElementById('next-button');
     const currentPageElement = document.getElementById('current-page');
 
-    // Retrieve div where we are going to put the users
     const usersCardContainer = document.getElementById('user-card');
 
     previousButton.addEventListener('click', goToUsersPreviousPage);
@@ -88,7 +85,6 @@
                 nextButton.classList.remove('hidden');
             }
 
-            //Clean list of units div to put the nex page
             usersCardContainer.innerHTML = '';
 
             Array.prototype.forEach.call(allUsers.usersPerPage, user => {
@@ -114,17 +110,14 @@
                         </div>
                     </div>`;
 
-                //Creo el elemento y le pongo el codigo hmtl de arriba
                 const colElement = document.createElement('div');
                 colElement.classList.add('col');
                 colElement.innerHTML = cardContentCode;
 
-                //Coloco el padre en mi div que contendrá todas las unidades
                 usersCardContainer.appendChild(colElement);
 
             });
 
-            // Scroll to the top of the page when finish fetching new users
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (error) {
@@ -138,8 +131,6 @@
 
     async function deleteUser(uid) {
 
-        //Call delete user endpoint
-
         await fetch(`/user/delete/${uid}`, {
             method: 'DELETE',
             headers: {
@@ -150,12 +141,12 @@
                 if (response.ok) {
                     showNotification('User deleted succesfully.', 'success');
                 } else {
-                    console.log(`Error while deleting user: ${response.status}  ${response.statusText}`);
+                    console.error(`Error while deleting user: ${response.status}  ${response.statusText}`);
                     showNotification(`Could not delete user correctly`, 'error');
                 }
             })
             .catch(error => {
-                console.log('Error while calling user delete endpoint: ', error);
+                console.error('Error while calling user delete endpoint: ', error);
                 showNotification(`Could not delete user correctly`, 'error');
             });
     }
@@ -176,74 +167,3 @@
     });
 
 </script>
-
-<style>
-    .pagination {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
-    .pagination__button {
-        background-color: #f1f1f1;
-        border: none;
-        color: #555;
-        padding: 8px 16px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 14px;
-        cursor: pointer;
-    }
-
-    .pagination__info {
-        margin: 0 10px;
-    }
-
-    .pagination__button:hover {
-        background-color: #ddd;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    #userStatus {
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        margin: 10px;
-    }
-
-    .red {
-        background-color: red;
-    }
-
-    .green {
-        background-color: green;
-    }
-
-    #user {
-        background-color: white;
-    }
-
-    .fill {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
-
-    .fill img {
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
-        object-fit: cover;
-    }
-
-    #alertContainer {
-        display: none;
-    }
-</style>
