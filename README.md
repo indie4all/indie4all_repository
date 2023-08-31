@@ -1,15 +1,30 @@
-######################### TFG BILAL ANIBA EL HASNAOUI 2023 ########################
+# TFG BILAL ANIBA EL HASNAOUI 2023
+# INDIE OPEN PROJECT
 
-################################# INDIE OPEN PROJECT #############################
+This project is about a repository of open educational resources where units can be published.
+learning processes prepared using the inde4allsquare tool (https://indie4allsquare.upct.es).
 
-#Passwords that passes the regex in the sign up process
+## Previous Requirements
+
+- Node.js (versión 18.14.0)
+- npm (versión 9.3.1)
+
+## Installation
+
+1. Clone this repository: `git clone https://github.com/bilalaniba/indie_open_project.git`
+2. Go to the project directory `cd ~/indie_open_project`
+3. Install the dependencies: `npm install`
+
+## Configuración
+
+1. Start the docker-compose.yml file that is in the root path of the project to have the MongoDB database in a container.
+2. You can also change the `MONGODB_CNN` variable in the `.env` environment variables file to connect the project to another database.
+
+## Usage
+
+1. To start the project just run the `npm start` command.
+2. If you choose to use Docker you can also start the docker-compose.yaml file and you would have both the application and the database running.
+
+# Passwords that passes the regex in the sign in and sign up process
 w3Unpo<code>t0d0
 m5Pñla-mula>v1a
-
-#User with ADMIN_ROLE
-bilalanibahasnaoui@gmail.com
-w3Unpo<code>t0d0
-
-#User with USER_ROLE
-CorneliusGLopez@jourrapide.com
-w3Unpo<code>t0d0
