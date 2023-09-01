@@ -1,0 +1,165 @@
+ContentDefinition 'UD' { 
+    package upctforma.UD;  
+    types {
+        TextType,
+        VideoType,
+        ImageType,
+        GameType,
+        IntType,
+        Any,
+        Tab{ name: TextType, content: ContentGroup },
+        DragAndDrop{ name: ImageType, content: ImageType, solution: ImageType },
+        DragAndDropTextual{ term: TextType, definition: TextType },
+        ContentGroup { list_of Any },
+        TabList { list_of Tab},
+        ImageList{list_of ImageType},
+        DragAndDropList{list_of DragAndDrop},
+        TextualDragAndDropList{list_of DragAndDropTextual},
+        widget ImageTextOver{ ImageType, TextType },
+        widget ImageTextRight{ ImageType, TextType },
+        widget VerticalAccordion{ TabList },
+        widget HorizontalTabs{ TabList },
+        Animation{ awidht: TextType, background: ImageType, images: ImageList, aheight: TextType },
+        widget AnimationInOut{ Animation },
+        widget RectangleDragAndDrop{ DragAndDropList },
+        widget TextualDragAndDrop{ TextualDragAndDropList },
+        AudioTerm { URL : TextType, term: TextType, definition: TextType, textTracks: TextType },
+        AudioTermList { list_of AudioTerm },
+        widget ContainerAudioTerm { AudioTermList },
+        ResponseList{ list_of TextType },
+        AnswerList{ list_of IntType },
+        Test { question: TextType, response: ResponseList, correct: Any, positiveFeedback: TextType, negativeFeedback: TextType },
+        TestList { list_of Test },
+        widget ContainerTest { TestList },
+        ChooseOptionRecord { questionText: TextType, questionImage: ImageType, response1: TextType, response2: TextType, response3: TextType, response4: TextType, correct: IntType },
+        widget ChooseOption { ChooseOptionRecord },
+        ImageSoundRecord { contentText: TextType, contentImage: ImageType, sound: TextType, textTracks: TextType },
+        ImageSoundList { list_of ImageSoundRecord },
+        widget ImageSound { ImageSoundList },
+        CouplesRecord { contentText: TextType, contentImage: ImageType },
+        CouplesList { list_of CouplesRecord },
+        widget Couples { CouplesList },
+        ListSchema { list_of ImageType },
+        widget Schema { ListSchema },
+        ModalRecord { name: TextType, content: ContentGroup },
+        widget ModalButton { ModalRecord },
+        TrueFalse { question: TextType, correct: TextType, positiveFeedback: TextType, negativeFeedback: TextType },
+        TrueFalseList { list_of TrueFalse }, 
+        widget ContainerTrueFalse { TrueFalseList },
+        TextList { list_of TextType }, 
+        ColumnRecord { heading: TextType, content: TextList}, 
+        ColumnsList { list_of ColumnRecord },
+        widget MatchColumns { ColumnsList },
+        PuzzlePiece {x: IntType,y: IntType,wdth: IntType,hght: IntType,altImg: TextType,altRec: TextType},
+        PuzzlePiecesContainer { list_of PuzzlePiece },
+        PuzzleContainer { background: ImageType, pieces: PuzzlePiecesContainer },
+        widget Puzzle { PuzzleContainer },
+        widget Animation { PuzzleContainer },
+        MissingSolutions { list_of TextType },
+        MissingSentence {sentence: TextType, combinations: MissingSolutions },
+        MissingSentencesList { list_of MissingSentence },
+        widget MissingWords { MissingSentencesList },
+        CorrectWordRecord { question: TextType, image: ImageType, answer: TextType },
+        CorrectWordRecords { list_of CorrectWordRecord },
+        widget CorrectWord {CorrectWordRecords},
+        ButtonTextRecord { image: ImageType, text: TextType},
+        ButtonTextList { list_of ButtonTextRecord },
+        widget ButtonText { ButtonTextList },
+        SentenceOrderWordList { list_of TextType },
+        SentenceOrderSolutionList { list_of TextType },
+        SentenceOrderRecord { solutions: SentenceOrderSolutionList, words: SentenceOrderWordList },
+        SentenceOrderContainer { list_of SentenceOrderRecord },
+        widget SentenceOrder { SentenceOrderContainer },
+        HangmanRecord { question: TextType, solution: TextType, attempts: IntType },
+        widget Hangman { HangmanRecord },
+        RowElement { list_of TextType },
+        RowList { list_of RowElement},
+        ColumnsList { list_of TextType },
+        TableRecord { columns: ColumnsList, rows: RowList },
+        widget Table { TableRecord },
+        widget RelatedUnitItem { TextType },
+        RelatedUnitsAssociationList { list_of RelatedUnitItem },
+        widget RelatedUnitsAssociation { RelatedUnitsAssociationList },
+        RelatedUnitsList {list_of Any },
+        widget RelatedUnits { RelatedUnitsList },
+        CalloutRecord { style: TextType, color: TextType, animation: TextType, content: ContentGroup },
+        widget Callout { CalloutRecord }
+    }
+    Unit 'El teatro desde principios del siglo XX hasta 1939: tendencias, autores y obras representativos.' 'Bilal Aniba El Hasnaoui' Local ES PRIVATE 'bilalanibahasnaoui@gmail.com' 'UPCT' 'Custom' 'b414f8148299' 0 { 
+        Section 'Teatro Realista y Naturalista' { 
+            title 'Teatro Realista y Naturalista' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>En esta época, se buscó representar la vida cotidiana de manera veraz y detallada. Los diálogos y personajes reflejaban problemas sociales y psicológicos de la época. Obras clave incluyen:
+                                </p><p><strong>Henrik Ibsen (Noruega):</strong> Su obra "Casa de muñecas" (1879) abordó la opresión de las mujeres y la lucha por la emancipación.
+                                </p><p><strong>Anton Chejov (Rusia):</strong> "La gaviota" (1896) y "Tío Vania" (1899) exploraron la melancolía y la desilusión en la vida cotidiana.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Teatro de Vanguardia y Expresionista' { 
+            title 'Teatro de Vanguardia y Expresionista' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>Estas tendencias desafiaron las convenciones tradicionales y experimentaron con formas y contenidos novedosos. Se enfocaron en la expresión emocional y la representación simbólica. Obras y autores destacados son:
+                                </p><p><strong>Georg Kaiser (Alemania): </strong>"Los burgraves" (1913) es un ejemplo de teatro expresionista, explorando la alienación y el conflicto interno.
+                                </p><p><strong>Luigi Pirandello (Italia): </strong>"Seis personajes en busca de autor" (1921) cuestiona la naturaleza de la realidad y la ficción.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Teatro Social y Político' { 
+            title 'Teatro Social y Político' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>En un contexto de agitación política y social, este teatro abordó temas como la lucha de clases y la injusticia. Autores y obras representativas son:
+                                </p><p><strong>Bertolt Brecht (Alemania):</strong> "Madre Coraje y sus hijos" (1941) utiliza la técnica del "distanciamiento" para fomentar la reflexión crítica.
+                                </p><p><strong>Federico García Lorca (España):</strong> "La casa de Bernarda Alba" (1936) critica la opresión de la mujer en una sociedad conservadora.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Teatro Surrealista' { 
+            title 'Teatro Surrealista' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>Este movimiento exploró los aspectos irracionales y oníricos de la mente humana. Las obras a menudo carecían de una estructura lineal y lógica. Un ejemplo relevante es:
+                                </p><p><strong>Antonin Artaud (Francia):</strong> Sus teorías y textos, como "El teatro y su doble" (1938), influyeron en la concepción de un teatro más visceral y trascendental.
+                                </p><p></p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Teatro de Humor y Absurdo' { 
+            title 'Teatro de Humor y Absurdo' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>Se exploraron situaciones absurdas y cómicas que reflejaban la condición humana. Obras y autores destacados son:
+                                </p><p><strong>Eugène Ionesco (Francia):</strong> "La cantante calva" (1950) y "La lección" (1951) son ejemplos de teatro del absurdo, que cuestionan la comunicación y la lógica convencional.</p>'
+                            } 
+                } 
+            }
+        }
+        ,Section 'Conclusion' { 
+            title 'Conclusion' 
+            row { 
+                column { 
+                    width '12' 
+                    Text{ 
+                                html '<p>En resumen, el teatro desde principios del siglo XX hasta 1939 experimentó con diversas tendencias y enfoques. Desde el realismo y naturalismo hasta las vanguardias y el teatro del absurdo, los autores y obras representativos reflejaron las tensiones sociales, políticas y psicológicas de la época, creando un panorama teatral diverso y en constante evolución.</p>'
+                            } 
+                } 
+            }
+        }
+    } 
+}    
