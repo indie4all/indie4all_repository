@@ -34,12 +34,14 @@ const UserSchema = Schema({
     }
 });
 
-UserSchema.methods.toJSON = function() {
-    const { __v, password, _id, ...user  } = this.toObject();
+UserSchema.methods.toJSON = function () {
+    const { __v, password, _id, ...user } = this.toObject();
     user.uid = _id;
     return user;
 }
 
 UserSchema.plugin(mongoosePaginate);
 
-module.exports = model( 'User', UserSchema );
+UserSchema.index({ email: 1 });
+
+module.exports = model('User', UserSchema);

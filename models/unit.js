@@ -67,4 +67,7 @@ const UnitSchema = Schema({
 
 UnitSchema.plugin(mongoosePaginate);
 
-module.exports = model( 'Unit', UnitSchema );
+UnitSchema.index({ resourceId: 1 });
+UnitSchema.index({ email: 1 });
+
+module.exports = model('Unit', UnitSchema);

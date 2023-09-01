@@ -224,7 +224,11 @@ const getAllUsers = async (req = request, res = response) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 12;
 
-    const { docs, totalPages } = await User.paginate({}, { page, limit });
+    const { docs, totalPages } = await User.paginate({}, { 
+        page, 
+        limit,
+        select: '_id role status name email image'
+      });
 
     res.json({
         usersPerPage: docs,

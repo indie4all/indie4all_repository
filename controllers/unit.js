@@ -13,19 +13,24 @@ const getUnits = async (req = request, res = response) => {
 
     console.info('Retrieving all the units...');
 
-    //Retrieve the user role
     const loggedInUser = await User.findOne({ '_id': req.uid }).lean();
 
-    //Retreieve page number from params
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 12;
 
-    //Check if the user is admin and have access to 'Users' tab
     let allUnits = null;
     if (loggedInUser.role == 'ADMIN_ROLE') {
-        allUnits = await Unit.paginate({}, { page, limit });
+        allUnits = await Unit.paginate({}, {
+            page,
+            limit,
+            select: 'resourceId title email cover'
+        });
     } else {
-        allUnits = await Unit.paginate({ 'email': loggedInUser.email }, { page, limit });
+        allUnits = await Unit.paginate({ 'email': loggedInUser.email }, {
+            page,
+            limit,
+            select: 'resourceId title email cover'
+        });
     }
 
     res.json({
@@ -277,7 +282,7 @@ async function createUnit(resourceId) {
             return;
         }
         console.info('Standar output', stdout);
-        
+
     });
 }
 
@@ -364,7 +369,19 @@ const getRandomUnits = async (req = request, res = response) => {
             while (selectedIndices.size < amount) {
                 selectedIndices.add(Math.floor(Math.random() * totalUnits));
             }
-            const selectedUnits = await Unit.aggregate([{ $sample: { size: amount } }]).allowDiskUse(true);
+
+            const selectedUnits = await Unit.aggregate([
+                { $limit: amount },
+                { $sample: { size: amount } },
+                {
+                    $project: {
+                        resourceId: 1,
+                        title: 1,
+                        cover: 1
+                    }
+                }
+            ]).allowDiskUse(true);
+
             response.flag = 1;
             response.units = selectedUnits;
         }
