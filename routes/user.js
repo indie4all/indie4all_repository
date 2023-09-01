@@ -13,7 +13,7 @@ const { getSignInPage,
     addNewUser,
     getCurrentUser,
     getAllUsersPage,
-    checkIfLogged } = require('../controllers/sign');
+    checkIfLogged } = require('../controllers/user');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validateFields');
 const validateJwt = require('../middlewares/validateJwt');
