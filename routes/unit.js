@@ -40,7 +40,7 @@ router.post('/edit/:resourceId', [
     validateJwt,
     check('resourceId', 'Resource Id parameter is mandatory').not().isEmpty(),
     validateFields,
-    upload.single('image')
+    upload.unitImageUpload.single('image')
 ], saveEditedUnit);
 
 router.delete('/delete', [

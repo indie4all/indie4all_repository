@@ -15,14 +15,12 @@ services:
       - "8080:8080"
     environment:
       - PORT=8080
-      - USER=bilalanibahasnaoui
-      - PASS=620571192
       - SECRET_OR_PRIVATE_KEY=Est03sMyPub1icK3y23@913
       - GOOGLE_CLIENT_ID=420441003888-mvopejroboqkvj6n95mp6s89ljshbagl.apps.googleusercontent.com
-      - GOOGLE_SECRET_ID=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
       - MONGODB_CNN=mongodb://mongo_db:27017/indieopen_db
     depends_on:
       - mongo_db
 
 volumes:
   mongo_db: {}
+  

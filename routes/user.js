@@ -58,7 +58,7 @@ router.post('/edit/:id', [
     validateJwt,
     check('id', 'Not valid ID').isMongoId(),
     validateFields,
-    upload.single('image')
+    upload.userImageUpload.single('image')
 ], editUser)
 
 router.get('/get/all', [
@@ -82,7 +82,7 @@ router.get('/add/form', [
 
 router.post('/add-user', [
     validateJwt,
-    upload.single('image')
+    upload.userImageUpload.single('image')
 ], addNewUser);
 
 router.get('/current', [

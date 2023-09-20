@@ -5,6 +5,12 @@
 
 <div class="container">
 
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" id="loading" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div><br>
+
     <div class="input-group" id="uploadUnitSection">
         <input type="file" class="form-control" accept=".json" id="jsonFileInput"
             aria-describedby="inputGroupFileAddon04" aria-label="Upload" data-buttonText="Your label here.">
@@ -114,24 +120,49 @@
 
     const viewUnit = async (resourceId) => {
         try {
-            const generateUnit = await fetch(`/unit/generatecontent?resourceId=${resourceId}`);
 
-            if (!generateUnit.ok) {
-                throw new Error('Error while generating unit content');
-            }
+            const generatedUnitId = await generateUnit(resourceId);
 
-            const generatedUnitId = await generateUnit.json();
-
-            if (!generatedUnitId.resourceId) {
+            if (isValidResourceId(generatedUnitId)) {
+                openNewWindow(generatedUnitId.resourceId);
+            } else {
                 throw new Error('Resource Id retrieved is not valid');
             }
-
-            window.open(`/${generatedUnitId.resourceId}`, '_blank').focus();
-
         } catch (error) {
             console.error('Error while viewing unit:', error);
         }
     };
+
+    const generateUnit = async (resourceId) => {
+
+        const spinnerBorder = document.getElementById('loading');
+        spinnerBorder.style.display = 'block';
+
+        try {
+            const response = await fetch(`/unit/generatecontent?resourceId=${resourceId}`);
+            
+            spinnerBorder.style.display = 'none';
+            
+            if (!response.ok) {
+                throw new Error('Error while generating unit content');
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error('Error while fetching unit content:', error);
+            throw error;
+        }
+    };
+
+    const isValidResourceId = (generatedUnitId) => {
+        return generatedUnitId && generatedUnitId.resourceId;
+    };
+
+    const openNewWindow = (resourceId) => {
+        const newWindow = window.open(`/${resourceId}`, '_blank');
+        newWindow.focus();
+    };
+
 
     const editUnit = async (resourceId) => {
         window.location.href = `/unit/edit/${resourceId}`;

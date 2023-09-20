@@ -5,6 +5,7 @@ const { exec } = require('child_process');
 const sass = require('sass');
 const path = require('path');
 const User = require('../models/user');
+const util = require('util');
 
 const VALID_COVER_PATTERN = /^data:([-\w.]+\/[-\w.+]+)?;base64,[A-Za-z0-9+/]*={0,2}$/;
 const VALID_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
@@ -46,18 +47,37 @@ const addUnit = async (req = request, res = response) => {
 
     const resourceId = req.body.resourceId;
 
-    //Check if unit already exists
     const unitExists = await Unit.findOne({ 'resourceId': resourceId }).lean();
     if (unitExists) {
         console.info('Unit already exists');
         res.status(409).json({ message: 'Unit already exists' });
     } else {
+
         const body = req.body;
-        const newUnit = new Unit({
-            ...body
+
+        let base64Image = body.cover;
+        base64Image = base64Image.replace(/^data:image\/jpeg;base64,/, '');
+
+        const folderPath = 'public\\assets\\unitsImgs\\';
+        const fileName = body.resourceId + '.png';
+        const completeImagePath = path.join(folderPath, fileName);
+
+        fs.writeFile(completeImagePath, base64Image, 'base64', (err) => {
+            if (err) {
+                console.error('Error writing file:', err);
+            } else {
+                console.log('The image has been successfully saved');
+            }
         });
 
-        //Save new unit in the database
+        const basePath = 'public'
+        const relativeImagePath = '/' + path.relative(basePath, completeImagePath).replace(/\\/g, '/');
+
+        const newUnit = new Unit({
+            ...body,
+            cover: relativeImagePath
+        });
+
         await newUnit.save().then(() => {
             res.status(200).json({ message: 'Unit added correctly' });
             console.info('Unit added correctly');
@@ -115,7 +135,6 @@ async function removeDirectoryOrFile(path) {
             console.info('File or directory successfully deleted.');
         }
     });
-
 }
 
 const getEditUnitForm = async (req = request, res = response) => {
@@ -145,25 +164,11 @@ const saveEditedUnit = async (req = request, res = response) => {
     const resourceId = req.params.resourceId;
     const unit = await Unit.findOne({ 'resourceId': resourceId }).lean();
 
-    let unitImage = unit.cover;
-
-    if (req.file) {
-
-        const newImagePath = req.file.path;
-
-        const rootFolderPath = process.cwd();
-        const newImageRelativePath = path.join(rootFolderPath, newImagePath);
-
-        unitImage = await convertFileToBase64(newImageRelativePath);
-    }
-
-
     const newColor = req.body.color ? req.body.color : unit.color;
 
     const updatedUnit = {
         ...unit,
         title: req.body.title,
-        cover: unitImage,
         user: req.body.user,
         email: req.body.email,
         institution: req.body.institution,
@@ -211,9 +216,6 @@ async function convertFileToBase64(newImageRelativePath) {
         const unitImage = 'data:image\/jpeg;base64,' + data.toString('base64');
         console.info('Unit image converted to base64 correctly');
 
-        await fs.unlink(newImageRelativePath);
-        console.info('Unit image removed successfully');
-
         return unitImage;
     } catch (err) {
         console.error('Error:', err);
@@ -230,6 +232,10 @@ const generateContent = async (req = request, res = response) => {
     //Retrieve unit to use it as example
     const unit = await Unit.findOne({ 'resourceId': resourceId });
 
+    const basePath = 'public';
+    const newImageRelativePath = path.join(basePath, unit.cover);
+    unit.cover = await convertFileToBase64(newImageRelativePath);
+
     const unitPath = path.join('public', unit.resourceId);
     const directoryExists = fs.existsSync(unitPath);
 
@@ -239,36 +245,41 @@ const generateContent = async (req = request, res = response) => {
 
         console.info(`Directory ${unitPath} does not exists.`);
 
-        await createFolder(unitPath);
+        let promisesArray = [
+            createFolder(unitPath),
+            copyAssetsToUnitFolder(unit.resourceId),
+            createJsonFile(unit),
+            createStyleFile("assets", unit.color, unit.cover),
+            createUnit(unit.resourceId),
 
-        await createJsonFile(unit);
+        ];
 
-        await createStyleFile("assets", unit.color, unit.cover);
-
-        await copyAssetsToUnitFolder(unit.resourceId);
-
-        await createUnit(unit.resourceId);
+        try {
+            await Promise.all(promisesArray);
+            console.log('All promises executed successfully');
+        } catch (error) {
+            console.error(error);
+        }
     }
+
     res.json({
         resourceId: resourceId
     });
 }
 
+const copyFileAsync = util.promisify(fs.copy);
+
 async function copyAssetsToUnitFolder(resourceId) {
+    try {
+        const rootFolderPath = process.cwd();
+        const assetsFolderPath = path.join(rootFolderPath, 'assets');
+        const unitSubFolderPath = path.join(rootFolderPath, 'public', resourceId, 'assets');
 
-    const rootFolderPath = process.cwd();
-    const assetsFolderPath = path.join(rootFolderPath, 'assets');
-    const unitSubFolderPath = path.join(rootFolderPath, 'public', resourceId, 'assets');
-
-    fs.copy(assetsFolderPath, unitSubFolderPath, (err) => {
-        if (err) {
-            console.error('An error occurred while copying the assets folder to the unit sub-folder:', err);
-            console.error(err);
-        } else {
-            console.info('Assets folder copied successfully.');
-        }
-    });
-
+        await copyFileAsync(assetsFolderPath, unitSubFolderPath);
+        console.info('Assets folder copied successfully.');
+    } catch (error) {
+        console.error('An error occurred while copying the assets folder to the unit sub-folder:', error);
+    }
 }
 
 async function createUnit(resourceId) {
@@ -309,60 +320,74 @@ async function createJsonFile(unit) {
     });
 }
 
+
+const writeFileAsync = util.promisify(fs.writeFile);
+const unlinkAsync = util.promisify(fs.unlink);
+
 async function createStyleFile(folder, color, cover) {
+    try {
+        console.info("Generating theme style");
 
-    console.info("Generating theme style");
+        const realColor = VALID_COLOR_PATTERN.test(color) ? color : '#000000';
+        const realCover = VALID_COVER_PATTERN.test(cover) ? cover : 'data:null';
 
-    const realColor = VALID_COLOR_PATTERN.test(color) ? color : '#000000';
-    const realCover = VALID_COVER_PATTERN.test(cover) ? cover : 'data:null';
+        const sassCode = `$base-color: ${realColor}; $base-url: "${realCover}"; @import 'theme.scss';`;
+        const scssFilePath = folder + '/generator/content/v4-7-5/css/temporaryStyles.scss';
+        const cssFilePath = folder + '/generator/content/v4-7-5/css/stylesCustom.min.css';
 
-    const sassCode = `$base-color: ${realColor}; $base-url: "${realCover}"; @import 'theme.scss';`;
-    const scssFilePath = folder + '/generator/content/v4-7-5/css/temporaryStyles.scss'
-    const cssFilePath = folder + '/generator/content/v4-7-5/css/stylesCustom.min.css';
+        await writeFileAsync(scssFilePath, sassCode);
 
-    fs.writeFile(scssFilePath, sassCode, function (err) {
-        if (err) {
-            console.error(err);
-        } else {
-            console.info('SCSS file created correctly.');
-            sass.render({
-                file: scssFilePath,
-                outputStyle: 'compressed'
-            }, function (error, result) {
-                if (error) {
-                    console.error(error);
-                } else {
-                    fs.writeFile(cssFilePath, result.css, function (err) {
-                        if (err) {
-                            console.error('Error while compiling SCSS to CSS :', err);
-                        } else {
-                            console.info(`Successfully compiled Sass to CSS. Output file: ${cssFilePath}`);
-                            fs.unlink(scssFilePath, function (err) {
-                                if (err) {
-                                    console.error('Error while removing SCSS file :', err);
-                                } else {
-                                    console.info(' SCSS file removed successfully.');
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
+        const result = await renderSassFile(scssFilePath);
+        await writeFileAsync(cssFilePath, result.css);
+
+        await unlinkAsync(scssFilePath);
+
+        console.info(`Successfully compiled Sass to CSS. Output file: ${cssFilePath}`);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function renderSassFile(scssFilePath) {
+    return new Promise((resolve, reject) => {
+        sass.render({
+            file: scssFilePath,
+            outputStyle: 'compressed'
+        }, (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
     });
+}
+
+
+function smallestMultipleOfNine(number, target) {
+    if (number < target) {
+        return 0;
+    }
+    const returnedNumber = Math.floor(number / target) * 9;
+    return returnedNumber;
 }
 
 const getRandomUnits = async (req = request, res = response) => {
 
     console.info("Getting random units...");
 
-    const amount = parseInt(req.query.amount);
+    let amount = parseInt(req.query.amount);
     let response = {};
     try {
         const totalUnits = await Unit.countDocuments();
         if (totalUnits <= amount) {
+            amount = smallestMultipleOfNine(totalUnits, 9);
+        }
+
+        if (amount == 0) {
             response.flag = 0;
-            response.units = [];
+            response.units = {};
+            response.amountUnitsRetrieved = amount;
         } else {
             const selectedIndices = new Set();
 
@@ -382,8 +407,9 @@ const getRandomUnits = async (req = request, res = response) => {
                 }
             ]).allowDiskUse(true);
 
-            response.flag = 1;
+
             response.units = selectedUnits;
+            response.amountUnitsRetrieved = amount;
         }
 
         res.json({ response: response });

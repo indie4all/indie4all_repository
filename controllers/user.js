@@ -138,12 +138,23 @@ const editUser = async (req = request, res = response) => {
         relativeImagePath = '/' + path.relative(basePath, imagePath).replace(/\\/g, '/');
     }
 
+    let role = originalUser.role;
+    let status = originalUser.status;
+    if (req.body.role) {
+        if (req.body.status) {
+            role = req.body.role;
+            status = req.body.status;
+        } else {
+            role = req.body.role;
+        }
+    }
+
     const updatedUser = {
         uid: uid,
         name: req.body.name,
         email: req.body.email,
-        role: req.body.role,
-        status: req.body.status,
+        role: role,
+        status: status,
         password: req.body.password,
         image: relativeImagePath
     };
@@ -154,7 +165,7 @@ const editUser = async (req = request, res = response) => {
     }
 
     await User.findByIdAndUpdate(uid, updatedUser).then(() => {
-        res.redirect('/user/all/page');
+        res.redirect('/');
         console.info('User edited succesfully');
     }).catch(error => {
         console.error(error);
@@ -182,10 +193,16 @@ const googleSignIn = async (req = request, res = response) => {
 
         let user = await User.findOne({ 'email': email })
 
-        if (!user.google) {
-            return res.status(400).json({
-                msg: 'Please log in with your email and password'
-            });
+        if (user) {
+            if (!user.google) {
+                return res.status(400).json({
+                    msg: 'Please log in with your email and password'
+                });
+            } else if (!user.status) {
+                return res.status(401).json({
+                    msg: 'User blocked - Contact you administrator'
+                });
+            }
         }
 
         if (!user) {
@@ -197,12 +214,6 @@ const googleSignIn = async (req = request, res = response) => {
             };
             user = new User(userData);
             await user.save()
-        }
-
-        if (!user.status) {
-            return res.status(401).json({
-                msg: 'User blocked - Contact you administrator'
-            });
         }
 
         const token = await getJwt(user.id);
@@ -224,11 +235,11 @@ const getAllUsers = async (req = request, res = response) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 12;
 
-    const { docs, totalPages } = await User.paginate({}, { 
-        page, 
+    const { docs, totalPages } = await User.paginate({}, {
+        page,
         limit,
         select: '_id role status name email image'
-      });
+    });
 
     res.json({
         usersPerPage: docs,

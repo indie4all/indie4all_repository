@@ -4,10 +4,10 @@
 
     <div class="row h-100">
         <div class="col-md-6 transparent-bg increased-font small-text">
-            <h1 class="fw-bold text-start lh-1" style="font-size: 5rem;">Crea, enseña y aprende</h1>
+            <h1 class="fw-bold text-start lh-1" style="font-size: 5rem;">Create, teach, and learn</h1>
             <p class="small text-start lh-sm mt-4">
-                Con una plataforma de contenido digital interactivo e inclusivo para compartir, reutilizar e innovar en
-                el aula.<br><a id="link" class="transition pt-3 " href="#carouselUnits"><svg
+                With an interactive and inclusive digital content platform for Share, reuse, and innovate in the
+                classroom.<br><a id="link" class="transition pt-3 " href="#carouselUnits"><svg
                         xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor"
                         class="bi bi-arrow-down" viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
@@ -204,18 +204,22 @@
                     var carouselUnitsDiv = document.getElementById("carouselUnits");
                     carouselUnitsDiv.remove();
                 } else {
-                    showUnits(apiResponse.units);
+                    showUnits(apiResponse.units, apiResponse.amountUnitsRetrieved);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
             });
 
-        const showUnits = (units) => {
+        const showUnits = (units, amountUnitsRetrieved) => {
 
             var carouselItems = document.querySelectorAll('.carousel-item');
 
             carouselItems.forEach((item, index) => {
+
+                if (index >= amountUnitsRetrieved) {
+                    return;
+                }
 
                 const cardDivCode = `<div class="card text-bg-dark" style="font-family: Arial,Helvetica,sans-serif; background-image: url(${units[index].cover}); background-size: cover; background-position: center center;" onclick="viewUnit('${units[index].resourceId}')">
                                         <img src="/assets/img/transparent-image.png" class="card-img opacity-75" style="width: auto; height: 450px;">

@@ -11,7 +11,7 @@ learning processes prepared using the inde4allsquare tool (https://indie4allsqua
 
 ## Installation
 
-1. Clone this repository: `git clone https://github.com/bilalaniba/indie_open_project.git`
+1. Clone this repository: `git clone https://anibabilal2@dev.azure.com/anibabilal2/Indie_open_project/_git/indie_open`
 2. Go to the project directory `cd ~/indie_open_project`
 3. Install the dependencies: `npm install`
 
@@ -27,4 +27,5 @@ learning processes prepared using the inde4allsquare tool (https://indie4allsqua
 
 # Passwords that passes the regex in the sign in and sign up process
 w3Unpo<code>t0d0
+
 m5Pñla-mula>v1a
