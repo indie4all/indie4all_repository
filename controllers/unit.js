@@ -122,6 +122,13 @@ const deleteUnit = async (req = request, res = response) => {
         await removeDirectoryOrFile(upctFormaFilePath);
     }
 
+    //Delete unit image if exists
+    const unitImagePath = `public/assets/unitsImgs/${resourceId}.png`;
+    const unitImageExists = fs.existsSync(unitImagePath);
+    if (unitImageExists) {
+        await removeDirectoryOrFile(unitImagePath);
+    }
+
     res.json({
         unit: unit
     })
